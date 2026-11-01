@@ -1,0 +1,1174 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>이음오페라단</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700;800&family=Gowun+Dodum&family=Noto+Sans+KR:wght@300;400;500&display=swap">
+<style>
+/* Layout: 한지 질감 위에 청자색과 낙관 빨강. 첫 화면은 '처음 + 공연일정'만 보이고, 나머지는 먹물 메뉴로 넘어가는 각각의 페이지. 붉은 실이 오른쪽에서 페이지를 잇는다. */
+:root {
+  --bg: #fbfaf5;        /* 한지 */
+  --paper: #edf3ef;     /* 청자빛 종이 */
+  --paper-2: #f5f1e8;   /* 미색 종이 */
+  --ink: #1c2725;       /* 먹 */
+  --ink-2: #5d6b67;     /* 옅은 먹 */
+  --jade: #4c9a84;      /* 청자 */
+  --jade-2: #2f6f5f;    /* 짙은 청자 */
+  --seal: #d2473a;      /* 낙관 빨강 */
+  --line: #dde4df;
+  --font-display: "Nanum Myeongjo", "Batang", serif;
+  --font-body: "Gowun Dodum", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-ui: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --wrap: 1180px;
+  /* 한지 섬유 질감 */
+  --hanji: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .32 0 0 0 0 .25 0 0 0 .07 0'/%3E%3C/filter%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .09' numOctaves='3' seed='4' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .5 0 0 0 0 .4 0 0 0 -1.6 .9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.35'/%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* 띠살 문살 무늬 */
+  --munsal: repeating-linear-gradient(90deg, transparent 0 21px, rgba(76,154,132,.09) 21px 22px), repeating-linear-gradient(0deg, transparent 0 132px, rgba(76,154,132,.12) 132px 133px, transparent 133px 139px, rgba(76,154,132,.12) 139px 140px);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--hanji), var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.85; word-break: keep-all; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 50; background: var(--bg); }
+body.lock { overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 800; margin: 0; line-height: 1.3; text-wrap: balance; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation-duration: .01s !important; animation-delay: 0s !important; transition-duration: .01s !important; } }
+
+/* ── 상단 ── */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40; background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: blur(10px); transition: box-shadow .3s; }
+.top.scrolled { box-shadow: 0 1px 0 var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 16px; }
+.logo { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 800; font-size: 20px; transition: color .4s; }
+.logo img { height: 34px; width: auto; max-width: 52vw; object-fit: contain; display: block; transition: filter .4s; }
+body.lock .top .logo img { filter: brightness(0) invert(1); }
+@media (max-width: 420px) { .logo img { height: 26px; } }
+.seal { display: inline-grid; place-items: center; width: 34px; height: 34px; background: var(--seal); color: #fff; font-family: var(--font-display); font-size: 12px; line-height: 1; border-radius: 4px; transform: rotate(-4deg); flex: none; }
+.top .right { display: flex; align-items: center; gap: 22px; }
+.top .cur-page { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); letter-spacing: .12em; transition: color .4s; }
+.mbtn { position: relative; z-index: 70; display: inline-flex; align-items: center; gap: 12px; height: 52px; padding: 0 8px 0 20px; border-radius: 999px; border: 0; background: var(--jade); color: #fff; cursor: pointer; font-family: var(--font-ui); font-size: 13px; letter-spacing: .14em; transition: background .4s, color .4s, transform .3s; }
+.mbtn:hover { transform: scale(1.04); }
+.mbtn i { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; }
+.mbtn i span, .mbtn i span::before { display: block; width: 16px; height: 2px; background: currentColor; position: relative; transition: transform .4s, width .3s; }
+.mbtn i span::before { content: ""; position: absolute; top: -6px; width: 10px; }
+.mbtn:hover i span::before { width: 16px; }
+body.lock .top { z-index: 70; background: transparent; backdrop-filter: none; box-shadow: none; }
+body.lock .top .logo, body.lock .top .cur-page { color: #fff; }
+body.lock .mbtn { background: var(--bg); color: var(--ink); }
+body.lock .mbtn i { background: var(--paper); }
+body.lock .mbtn i span { transform: rotate(45deg); }
+body.lock .mbtn i span::before { width: 16px; top: 0; transform: rotate(90deg); }
+@media (max-width: 600px) { .top .cur-page { display: none; } .mbtn { padding: 0 6px 0 16px; } }
+
+/* ── 병풍 메뉴: 여섯 폭이 차례로 펼쳐져 한 장의 공연 사진이 되고, 그 위에 메뉴가 떠오른다 ── */
+.overlay { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
+body.lock .overlay { pointer-events: auto; }
+.overlay .screen { position: absolute; inset: 0; display: flex; perspective: 1800px; background: transparent; visibility: hidden; transition: visibility 0s 1.3s; }
+body.lock .overlay .screen { visibility: visible; transition-delay: 0s; }
+.overlay .panel { position: relative; flex: 1; overflow: hidden; transform: rotateY(90deg); transform-origin: left center; transition: transform .9s cubic-bezier(.7,0,.2,1); transition-delay: calc((5 - var(--p)) * .06s); border-right: 1px solid rgba(232,201,138,.45); backface-visibility: hidden; }
+.overlay .panel:nth-child(even) { transform: rotateY(-90deg); transform-origin: right center; }
+.overlay .panel:last-child { border-right: 0; }
+.overlay .panel::before { content: ""; position: absolute; top: 0; bottom: 0; left: calc(var(--p) * -100%); width: 600%; background: #14201d url("img/hero-han.jpg") center 60% / cover; filter: brightness(.34) saturate(.85); }
+.overlay .panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.35), transparent 30%, transparent 70%, rgba(0,0,0,.25)); }
+body.lock .overlay .panel { transform: none; transition-delay: calc(var(--p) * .08s); }
+.overlay nav { position: absolute; inset: 0; display: grid; align-content: center; justify-items: center; gap: 28px; padding: 110px max(24px, 5vw) 40px; overflow-y: auto; }
+.overlay ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 0; width: min(1000px, 100%); }
+.overlay li { display: grid; place-items: center; opacity: 0; transform: translateY(14px); transition: opacity .4s, transform .4s; }
+body.lock .overlay li { opacity: 1; transform: none; transition: opacity .5s, transform .5s; transition-delay: calc(.75s + var(--i) * .05s); }
+.overlay a { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; padding: 16px 8px; font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 2.6vw, 32px); color: #fff; text-align: center; transition: color .3s; }
+.overlay a::after { content: ""; width: 0; height: 1px; margin-top: 6px; background: var(--gold, #e8c98a); transition: width .4s; }
+.overlay a:hover, .overlay a.on { color: #e8c98a; }
+.overlay a:hover::after, .overlay a.on::after { width: 40px; }
+.overlay a small { font-family: var(--font-ui); font-weight: 400; font-size: 11px; opacity: .6; letter-spacing: .18em; color: #fff; }
+.overlay .meta { color: rgba(255,255,255,.65); font-family: var(--font-ui); font-size: 13px; line-height: 1.9; text-align: center; opacity: 0; transition: opacity .3s; }
+body.lock .overlay .meta { opacity: 1; transition: opacity .6s 1.3s; }
+.overlay .meta a.sm { display: inline; padding: 0; font: inherit; color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+.overlay .meta a.sm::after { display: none; }
+.overlay .meta a.sm:hover { color: #e8c98a; }
+@media (max-width: 640px) { .overlay ul { grid-template-columns: 1fr; gap: 0; } .overlay a { flex-direction: row; align-items: baseline; gap: 12px; padding: 6px; font-size: 24px; } .overlay a::after { display: none; } }
+
+/* ── 붉은 실 (페이지 이동 + 스크롤 진행) ── */
+.thread { position: fixed; right: max(18px, env(safe-area-inset-right, 0px)); top: 50%; transform: translateY(-50%); z-index: 30; height: min(56vh, 420px); width: 20px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; }
+.thread::before, .thread i { content: ""; position: absolute; left: 50%; top: 0; width: 1px; margin-left: -.5px; }
+.thread::before { bottom: 0; background: var(--line); }
+.thread i { height: calc(var(--p, 0) * 100%); background: var(--seal); transition: height .5s; }
+.thread a { position: relative; width: 11px; height: 11px; border-radius: 50%; background: var(--bg); border: 1.5px solid #c9d3cd; transition: background .3s, border-color .3s, transform .3s; }
+.thread a.on { background: var(--seal); border-color: var(--seal); transform: scale(1.3); }
+.thread a span { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; font-family: var(--font-ui); font-size: 12px; color: var(--ink-2); opacity: 0; transition: opacity .25s; pointer-events: none; }
+.thread a:hover span, .thread a.on span { opacity: 1; }
+@media (max-width: 1100px) { .thread a span { display: none; } }
+@media (max-width: 700px) { .thread { display: none; } }
+
+/* ── 페이지 전환 ── */
+.view[hidden] { display: none !important; }
+.view.enter { animation: viewin .9s cubic-bezier(.2,.8,.2,1); }
+@keyframes viewin { from { opacity: 0; filter: blur(8px); transform: translateY(18px); } to { opacity: 1; filter: none; transform: none; } }
+
+/* ── 공통 섹션 ── */
+.sec { padding-block: 110px; }
+.sec-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 56px; }
+.label { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-ui); font-size: 12px; letter-spacing: .22em; color: var(--jade-2); }
+.label::before { content: ""; width: 28px; height: 1px; background: var(--seal); }
+.sec-head h2 { font-size: clamp(32px, 4.4vw, 52px); margin-top: 14px; }
+.sec-head p { margin: 0; color: var(--ink-2); max-width: 30em; }
+.reveal { transition: opacity 1.1s ease, transform 1.1s ease, filter 1.1s ease; }
+.js .reveal.wait { opacity: 0; transform: translateY(24px); filter: blur(6px); }
+.band { background: var(--munsal), var(--paper); }
+.band-2 { background: var(--munsal), var(--paper-2); }
+
+/* 하위 페이지 머리 */
+.phead { position: relative; overflow: hidden; }
+.phead .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 48px; align-items: end; padding-block: 64px 70px; }
+.phead h1 { font-size: clamp(44px, 6.4vw, 84px); line-height: 1.1; margin-top: 18px; }
+.phead p { color: var(--ink-2); margin: 18px 0 0; max-width: 28em; }
+.phead .photo { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background: var(--img) var(--pos, center) / cover; border-radius: 0 120px 0 0; box-shadow: 0 40px 60px -40px rgba(28,39,37,.55); }
+.phead .photo::after { content: ""; position: absolute; left: -14px; bottom: -14px; width: 70px; height: 70px; border-left: 2px solid var(--seal); border-bottom: 2px solid var(--seal); }
+@media (max-width: 860px) { .phead .wrap { grid-template-columns: 1fr; gap: 32px; padding-block: 40px 50px; } }
+
+/* 포스터 */
+.poster { position: relative; aspect-ratio: 537 / 760; max-width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 16px; color: #fff; background: var(--tone); overflow: hidden; isolation: isolate; font-family: var(--font-ui); }
+.poster::before { content: ""; position: absolute; inset: 0; z-index: -1; background: radial-gradient(120% 80% at 80% 8%, rgba(255,255,255,.3), transparent 55%), linear-gradient(180deg, transparent 50%, rgba(0,0,0,.3)); }
+.poster.img { background: var(--img) center / cover, var(--paper); }
+.poster.img::before, .poster.img > * { display: none; }
+.poster .pt { font-size: 9px; letter-spacing: .18em; text-transform: uppercase; opacity: .85; }
+.poster .pn { font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.15; }
+.poster .pn em { display: block; font-family: var(--font-ui); font-style: normal; font-weight: 400; font-size: .4em; margin-bottom: 6px; opacity: .9; }
+.poster .pf { font-size: 11px; opacity: .9; line-height: 1.45; }
+.t-byul { --tone: radial-gradient(circle at 30% 105%, rgba(255,255,255,.35) 0 18%, transparent 19%), radial-gradient(circle at 78% 20%, rgba(255,226,150,.9) 0 7%, transparent 7.5%), linear-gradient(170deg, #48b3ad, #1f6d86 55%, #123f5c); }
+
+/* ── 첫 화면: 공연 사진 위로 상설 레퍼토리가 돌아간다 ── */
+.hero { position: relative; overflow: hidden; background: #14201d; color: #fff; min-height: 600px; display: grid; grid-template-rows: 1fr auto; isolation: isolate; }
+.hero .photos { position: absolute; inset: 0; z-index: -1; }
+.hero .photos::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,32,29,.88) 0%, rgba(20,32,29,.55) 45%, rgba(20,32,29,.05) 80%), linear-gradient(0deg, rgba(20,32,29,.92), transparent 42%); }
+.hero .layer { position: absolute; inset: 0; opacity: 0; background: var(--img) var(--pos, center) / cover; transform: scale(1.06); transition: opacity 1.2s ease, transform 7s ease-out; }
+.hero .layer.on { opacity: 1; transform: scale(1); }
+.hero .txt { align-self: end; display: grid; gap: 12px; justify-items: start; padding: 110px clamp(20px, 4vw, 56px) 28px; max-width: 680px; min-width: 0; }
+.hero .genre { font-family: var(--font-ui); font-size: 13px; letter-spacing: .16em; color: #9fd3c3; }
+.hero .txt h2 { font-size: clamp(44px, 7vw, 92px); line-height: 1.05; }
+.hero .desc { margin: 0; color: #d6e2dd; max-width: 26em; }
+.hero .hmeta { display: flex; flex-wrap: wrap; gap: 4px 18px; font-family: var(--font-ui); font-size: 13px; color: #b9c7c2; }
+.hero .award { display: inline-block; padding: 3px 12px; border: 1px solid #f08a7e; color: #f8b3aa; font-family: var(--font-ui); font-size: 12px; border-radius: 2px; }
+.hero .btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.hero .btns .btn { margin: 0; background: var(--seal); }
+.hero .btns .btn.ghost { background: transparent; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.6); }
+.hero .txt.swap > * { animation: heroin .7s both; }
+.hero .txt.swap > *:nth-child(2) { animation-delay: .06s; }
+.hero .txt.swap > *:nth-child(3) { animation-delay: .12s; }
+.hero .txt.swap > *:nth-child(4) { animation-delay: .18s; }
+.hero .txt.swap > *:nth-child(5) { animation-delay: .24s; }
+.hero .txt.swap > *:nth-child(6) { animation-delay: .3s; }
+@keyframes heroin { from { opacity: 0; transform: translateY(12px); filter: blur(5px); } to { opacity: 1; transform: none; filter: none; } }
+.nextchip { position: absolute; z-index: 2; top: 22px; right: clamp(20px, 4vw, 56px); display: inline-flex; align-items: center; gap: 10px; padding: 7px 16px 7px 8px; border-radius: 999px; background: #fff; color: var(--ink); box-shadow: 0 10px 24px -14px rgba(0,0,0,.5); font-family: var(--font-ui); font-size: 13px; }
+.nextchip i { font-style: normal; padding: 2px 10px; border-radius: 999px; background: var(--seal); color: #fff; font-size: 12px; }
+.nextchip b { color: var(--seal); font-weight: 500; }
+.nextchip:hover { box-shadow: 0 0 0 2px var(--jade), 0 10px 24px -14px rgba(0,0,0,.5); }
+.hero .hfoot { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center; padding: 0 clamp(20px, 4vw, 56px) 28px; }
+.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; min-width: 0; }
+.tab { position: relative; display: block; padding: 14px 0 0; border: 0; background: none; cursor: pointer; text-align: left; color: #b9c7c2; transition: color .3s; }
+.tab:hover, .tab.on { color: #fff; }
+.tab .tb { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: rgba(255,255,255,.25); overflow: hidden; }
+.tab.on .tb { height: 2px; }
+.tab .tb b { position: absolute; inset: 0; background: var(--seal); transform-origin: left; transform: scaleX(0); }
+.tab .tt { display: block; min-width: 0; font-family: var(--font-display); font-weight: 700; font-size: 16px; line-height: 1.35; }
+.tab .tt small { display: block; margin-bottom: 2px; font-family: var(--font-ui); font-weight: 400; font-size: 11px; letter-spacing: .04em; color: #b9c7c2; opacity: .8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ctrl { display: flex; align-items: center; gap: 12px; }
+.arrow { width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(255,255,255,.5); display: grid; place-items: center; cursor: pointer; background: rgba(20,32,29,.35); color: #fff; backdrop-filter: blur(6px); transition: background .3s, color .3s, transform .3s; }
+.arrow:hover { background: #fff; color: var(--ink); transform: scale(1.06); }
+.arrow svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.count { min-width: 56px; text-align: center; font-family: var(--font-ui); font-size: 14px; color: #b9c7c2; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+.count b { color: #fff; font-weight: 500; }
+@media (max-width: 1060px) { .tab .tt small { display: none; } }
+@media (max-width: 700px) {
+  .hero { min-height: 620px; }
+  .hero .photos::after { background: linear-gradient(0deg, rgba(20,32,29,.95) 30%, rgba(20,32,29,.35) 75%, rgba(20,32,29,.1)); }
+  .nextchip { left: 16px; right: auto; top: 16px; }
+  .hero .txt { padding-top: 150px; }
+  .hero .hfoot { grid-template-columns: 1fr; gap: 16px; }
+  .tabs { display: flex; overflow-x: auto; scrollbar-width: none; padding-top: 2px; }
+  .tab { flex: none; width: 96px; }
+  .ctrl { justify-content: space-between; }
+}
+.btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 10px; margin-top: 10px; padding: 12px 24px; border-radius: 4px; background: var(--ink); color: #fff; font-family: var(--font-ui); font-size: 14px; position: relative; overflow: hidden; isolation: isolate; }
+.btn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--jade); transform: translateX(-101%); transition: transform .45s cubic-bezier(.6,0,.2,1); }
+.btn:hover::before { transform: none; }
+.btn.ghost { background: none; color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.btn.ghost:hover { color: #fff; }
+@keyframes inkin { to { opacity: 1; transform: none; filter: none; } }
+
+/* ── 다음 공연 ── */
+.feat { display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: 64px; align-items: center; }
+.feat .poster { box-shadow: 0 40px 60px -30px rgba(28,39,37,.5); transform: rotate(-2deg); transition: transform .6s; }
+.feat .poster:hover { transform: rotate(0) scale(1.02); }
+.feat h3 { font-size: clamp(34px, 4.6vw, 58px); line-height: 1.15; }
+.feat h3 small { display: block; font-size: .32em; font-weight: 400; font-family: var(--font-ui); color: var(--jade-2); letter-spacing: .1em; margin-bottom: 12px; }
+.feat .desc { color: var(--ink-2); margin: 20px 0 28px; max-width: 30em; }
+.info { display: grid; grid-template-columns: auto 1fr; margin: 0 0 28px; border-top: 1px solid var(--line); max-width: 480px; }
+.info dt, .info dd { padding: 12px 0; border-bottom: 1px solid var(--line); margin: 0; }
+.info dt { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); padding-right: 28px; }
+.info dd.tbd { color: var(--ink-2); }
+.feat .credit { margin: -12px 0 24px; font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); }
+.sub-label { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); letter-spacing: .14em; margin: 90px 0 26px; display: flex; align-items: center; gap: 14px; }
+.sub-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.recent { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.recent a { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 18px; align-items: center; }
+.recent .poster { box-shadow: 0 14px 24px -14px rgba(28,39,37,.5); transition: transform .4s; }
+.recent a:hover .poster { transform: translateY(-4px) rotate(-2deg); }
+.recent b { display: block; font-family: var(--font-display); font-size: 17px; line-height: 1.45; }
+.recent span { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); line-height: 1.6; display: block; margin-top: 4px; }
+.recent a:hover b { color: var(--jade-2); }
+@media (max-width: 860px) { .feat { grid-template-columns: 1fr; gap: 40px; } .feat .poster { max-width: 320px; } .recent { grid-template-columns: 1fr; gap: 18px; } }
+
+/* 둘러보기 카드 */
+.tour { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.tour a { position: relative; aspect-ratio: 3 / 4; max-width: 100%; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px; color: #fff; isolation: isolate; border-radius: 0 0 0 0; }
+.tour a::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--img) var(--pos, center) / cover; transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
+.tour a::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 35%, rgba(20,32,29,.85)); transition: background .5s; }
+.tour a:hover::before { transform: scale(1.08); }
+.tour a:hover::after { background: linear-gradient(180deg, rgba(47,111,95,.2), rgba(20,32,29,.9)); }
+.tour small { font-family: var(--font-ui); font-size: 11px; letter-spacing: .2em; opacity: .8; }
+.tour b { font-family: var(--font-display); font-size: 24px; font-weight: 800; }
+.tour span { font-family: var(--font-ui); font-size: 13px; opacity: .85; display: flex; justify-content: space-between; align-items: center; }
+.tour span::after { content: "→"; transition: transform .3s; }
+.tour a:hover span::after { transform: translateX(6px); }
+@media (max-width: 860px) { .tour { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ── 소개 ── */
+.about { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 72px; align-items: start; }
+.portrait { position: relative; }
+.portrait .ph { aspect-ratio: 2 / 3; max-width: 100%; background: url("img/about.jpg") center 30% / cover; border-radius: 200px 200px 0 0; box-shadow: 0 40px 60px -40px rgba(28,39,37,.6); }
+.about .lead { font-family: var(--font-display); font-size: clamp(22px, 2.6vw, 30px); font-weight: 700; line-height: 1.6; margin: 22px 0 28px; }
+.about .lead b { color: var(--jade-2); }
+.about .text p { margin: 0 0 16px; color: var(--ink-2); max-width: 34em; }
+.about .sign { margin-top: 28px; display: flex; align-items: center; gap: 12px; font-family: var(--font-ui); font-size: 14px; color: var(--ink-2); }
+.about .sign b { font-family: var(--font-display); font-size: 22px; color: var(--ink); }
+.marks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.marks div { padding-top: 20px; border-top: 2px solid var(--ink); }
+.marks b { display: block; font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 2.8vw, 34px); line-height: 1.3; }
+.marks span { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); }
+.values { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.values div { padding: 30px 26px; background: var(--bg); border-top: 3px solid var(--jade); }
+.values b { display: block; font-family: var(--font-display); font-size: 21px; margin-bottom: 8px; }
+.values p { margin: 0; color: var(--ink-2); font-size: 15px; }
+@media (max-width: 860px) { .about { grid-template-columns: 1fr; gap: 40px; } .portrait { max-width: 360px; } .marks { grid-template-columns: repeat(2, minmax(0, 1fr)); } .values { grid-template-columns: 1fr; } }
+
+/* ── 레퍼토리 ── */
+.line { position: relative; }
+.line::before { content: ""; position: absolute; left: 0; right: 0; top: 12px; height: 1px; background: var(--seal); opacity: .55; }
+.rail { display: flex; gap: 30px; overflow-x: auto; padding: 0 0 22px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+.hang { flex: none; width: clamp(160px, 17vw, 210px); scroll-snap-align: start; padding: 26px 0 0; position: relative; transform-origin: 50% 12px; transition: transform .5s; background: none; border: 0; text-align: left; cursor: pointer; }
+.hang::before { content: ""; position: absolute; top: 6px; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: var(--seal); box-shadow: 0 0 0 3px var(--paper-2); z-index: 1; }
+.hang:hover { transform: rotate(-2.5deg); }
+.hang .poster { box-shadow: 0 20px 34px -18px rgba(28,39,37,.5); outline: 3px solid transparent; outline-offset: 4px; transition: outline-color .3s; }
+.hang[aria-selected="true"] .poster { outline-color: var(--jade); }
+.hang .cap { display: block; margin-top: 12px; font-family: var(--font-display); font-weight: 700; font-size: 16px; }
+.hang .cap span { display: block; font-family: var(--font-ui); font-weight: 400; font-size: 12px; color: var(--ink-2); }
+.detail { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 56px; margin-top: 40px; padding: 44px; background: var(--hanji), var(--bg); box-shadow: 0 1px 0 var(--line), 0 30px 60px -40px rgba(28,39,37,.35); }
+.detail .genre { font-family: var(--font-ui); font-size: 13px; color: var(--jade-2); letter-spacing: .1em; }
+.detail h3 { font-size: clamp(28px, 3.4vw, 40px); margin: 6px 0 16px; }
+.detail p { margin: 0; color: var(--ink-2); }
+.detail .award { display: inline-block; margin-top: 18px; padding: 4px 12px; border: 1px solid var(--seal); color: var(--seal); font-family: var(--font-ui); font-size: 12px; border-radius: 2px; }
+.detail .award:empty { display: none; }
+.detail dl { margin: 0; display: grid; grid-template-columns: auto 1fr; border-top: 1px solid var(--line); align-self: start; }
+.detail dt, .detail dd { margin: 0; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.detail dt { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); padding-right: 24px; }
+.detail .btns { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.detail .btns .btn { margin: 0; }
+.detail.swap > * { animation: inkin .6s both; }
+.catalog { display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-top: 56px; padding: 32px 36px; background: var(--ink); color: #eef3f0; }
+.catalog b { font-family: var(--font-display); font-size: 22px; display: block; }
+.catalog p { margin: 4px 0 0; color: #b9c7c2; font-size: 15px; }
+.catalog .btn { background: var(--seal); margin: 0; }
+@media (max-width: 860px) { .detail { grid-template-columns: 1fr; gap: 28px; padding: 28px 22px; } }
+
+/* ── 연혁 ── */
+.hist { position: relative; max-width: 940px; }
+.hist::before { content: ""; position: absolute; left: 120px; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(var(--seal), var(--jade) 70%, var(--line)); }
+.yr { display: grid; grid-template-columns: 120px minmax(0, 1fr); padding-bottom: 48px; position: relative; }
+.yr h3 { font-size: 30px; line-height: 1; padding-top: 2px; }
+.yr h3::after { content: ""; position: absolute; left: 114px; top: 8px; width: 13px; height: 13px; border-radius: 50%; background: var(--bg); border: 2px solid var(--seal); }
+.yr ol { list-style: none; margin: 0; padding: 0 0 0 40px; }
+.yr li { display: grid; grid-template-columns: 78px minmax(0, 1fr) minmax(0, .85fr); gap: 16px; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+.yr li:last-child { border-bottom: 0; }
+.yr time { font-family: var(--font-ui); font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.yr .v { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); padding-top: 2px; }
+.yr li.next time, .yr li.next .w { color: var(--seal); }
+.yr li.op .w { font-family: var(--font-display); font-weight: 700; }
+.yr li:not(.op) .w { color: var(--ink-2); }
+.tag { display: inline-block; margin-left: 8px; padding: 0 7px; border: 1px solid var(--seal); color: var(--seal); font-family: var(--font-ui); font-size: 11px; line-height: 1.7; border-radius: 2px; vertical-align: 1px; }
+@media (max-width: 700px) { .hist::before { left: 6px; } .yr { grid-template-columns: 1fr; padding-left: 30px; gap: 10px; } .yr h3::after { left: 0; } .yr ol { padding-left: 0; } .yr li { grid-template-columns: 70px minmax(0, 1fr); gap: 2px 12px; } .yr .v { grid-column: 2; } }
+
+/* ── 영상 ── */
+.videos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px 26px; }
+.vid { display: flex; flex-direction: column; gap: 12px; }
+.vid .thumb { position: relative; aspect-ratio: 16 / 9; max-width: 100%; overflow: hidden; background: var(--paper); }
+.vid .thumb::before { content: ""; position: absolute; inset: 0; background: var(--img) var(--pos, center) / cover; transition: transform 1s cubic-bezier(.2,.8,.2,1); }
+.vid .thumb::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 40%, rgba(0,0,0,.4)); }
+.vid:hover .thumb::before { transform: scale(1.07); }
+.vid .play { position: absolute; z-index: 1; top: 50%; left: 50%; width: 58px; height: 58px; margin: -29px 0 0 -29px; border-radius: 50%; background: rgba(255,255,255,.92); transition: transform .4s; }
+.vid .play::before { content: ""; position: absolute; top: 50%; left: 50%; margin: -8px 0 0 -4px; border-left: 14px solid var(--jade-2); border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+.vid:hover .play { transform: scale(1.12); }
+.vid b { font-family: var(--font-display); font-size: 18px; }
+.vid span { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); margin-top: -8px; }
+.press { display: flex; flex-wrap: wrap; gap: 10px; }
+.press a { padding: 9px 20px; border: 1px solid #cfd8d2; border-radius: 999px; background: var(--bg); font-family: var(--font-ui); font-size: 14px; transition: border-color .25s, color .25s, background .25s; }
+.press a:hover { border-color: var(--jade); background: var(--paper); color: var(--jade-2); }
+@media (max-width: 860px) { .videos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 520px) { .videos { grid-template-columns: 1fr; } }
+
+/* ── 분류 버튼 ── */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; }
+.filters button { border: 1px solid #cfd8d2; background: var(--bg); border-radius: 999px; padding: 7px 18px; font-family: var(--font-ui); font-size: 14px; cursor: pointer; transition: background .25s, color .25s, border-color .25s; }
+.filters button:hover { border-color: var(--jade); }
+.filters button[aria-selected="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.filters button small { margin-left: 6px; opacity: .6; font-size: 12px; }
+
+/* ── 공지사항 ── */
+.nlist { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.nlist > li { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 70%, transparent); }
+.nlist > li.pin { background: color-mix(in srgb, var(--paper) 80%, transparent); }
+.nlist summary { list-style: none; display: grid; grid-template-columns: 96px minmax(0, 1fr) auto 20px; gap: 20px; align-items: center; padding: 20px 8px; cursor: pointer; }
+.nlist summary::-webkit-details-marker { display: none; }
+.nlist summary:hover .nt { color: var(--jade-2); }
+.nlist summary::after { content: ""; width: 9px; height: 9px; border-right: 1.5px solid var(--ink-2); border-bottom: 1.5px solid var(--ink-2); transform: rotate(45deg); transition: transform .3s; justify-self: center; }
+.nlist details[open] summary::after { transform: rotate(-135deg); }
+.cat { justify-self: start; padding: 3px 12px; border-radius: 2px; font-family: var(--font-ui); font-size: 12px; font-weight: 500; color: #fff; background: var(--jade-2); white-space: nowrap; }
+.cat.공연 { background: var(--jade); }
+.cat.오디션 { background: var(--seal); }
+.cat.결과발표 { background: #b0702a; }
+.cat.소식 { background: var(--ink-2); }
+.nt { font-family: var(--font-display); font-weight: 700; font-size: 18px; line-height: 1.5; transition: color .2s; }
+.nt .pinmark { color: var(--seal); font-size: 13px; font-family: var(--font-ui); margin-right: 8px; }
+.nt .ex { display: inline-block; margin-left: 8px; padding: 0 7px; border: 1px dashed var(--ink-2); color: var(--ink-2); font-family: var(--font-ui); font-size: 11px; font-weight: 400; border-radius: 2px; vertical-align: 2px; }
+.nd { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.nbody { padding: 4px 8px 32px 124px; color: var(--ink-2); animation: inkin .5s both; }
+.nbody p { margin: 0 0 12px; max-width: 42em; }
+.nbody dl { display: grid; grid-template-columns: auto 1fr; gap: 0; margin: 14px 0; max-width: 560px; border-top: 1px solid var(--line); }
+.nbody dt, .nbody dd { margin: 0; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+.nbody dt { font-family: var(--font-ui); font-size: 13px; padding-right: 22px; }
+.nbody dd { color: var(--ink); }
+.nbody .btn { margin-top: 8px; }
+.nlist.compact summary { grid-template-columns: 96px minmax(0, 1fr) auto; }
+.nlist.compact summary::after { display: none; }
+.nlist.compact a { display: contents; }
+@media (max-width: 700px) {
+  .nlist summary, .nlist.compact summary { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
+  .nlist summary .cat { grid-column: 1; }
+  .nlist summary .nt { grid-column: 1 / -1; grid-row: 2; }
+  .nlist summary .nd { grid-column: 2; grid-row: 1; justify-self: end; }
+  .nlist summary::after { display: none; }
+  .nbody { padding: 0 8px 26px; }
+}
+
+/* ── 언론보도 ── */
+.pyear { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; padding-bottom: 40px; }
+.pyear > h3 { font-size: 30px; line-height: 1.2; }
+.pyear ul { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--ink); }
+.pyear li a { display: grid; grid-template-columns: 70px 110px minmax(0, 1fr) auto; gap: 18px; align-items: baseline; padding: 18px 6px; border-bottom: 1px solid var(--line); transition: background .25s; }
+.pyear li a:hover { background: var(--paper); }
+.pyear li a:hover .pt2 { color: var(--jade-2); }
+.pd { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.po { font-family: var(--font-ui); font-size: 13px; font-weight: 500; color: var(--jade-2); }
+.pt2 { font-family: var(--font-display); font-weight: 700; font-size: 17px; line-height: 1.55; transition: color .2s; }
+.pt2 small { display: block; font-family: var(--font-ui); font-weight: 400; font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+.pyear li a::after { content: "↗"; color: var(--ink-2); font-family: var(--font-ui); }
+@media (max-width: 760px) { .pyear { grid-template-columns: 1fr; gap: 10px; } .pyear li a { grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; } .pyear .pt2 { grid-column: 1 / -1; } .pyear li a::after { display: none; } }
+
+/* ── 관람후기 ── */
+.reviews { columns: 3 300px; column-gap: 24px; }
+.rv { break-inside: avoid; display: block; margin: 0 0 24px; padding: 26px 24px 22px; background: var(--hanji), var(--bg); box-shadow: 0 1px 0 var(--line), 0 24px 40px -32px rgba(28,39,37,.45); position: relative; transition: transform .4s, box-shadow .4s; }
+.rv:hover { transform: translateY(-4px) rotate(-.4deg); box-shadow: 0 1px 0 var(--line), 0 30px 50px -30px rgba(28,39,37,.5); }
+.rv .shot { margin: -26px -24px 18px; aspect-ratio: 4 / 3; max-width: calc(100% + 48px); background: var(--img) center / cover, var(--paper); }
+.rv .src { display: flex; align-items: center; gap: 10px; font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); margin-bottom: 14px; }
+.rv .src i { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; font-style: normal; font-size: 12px; font-weight: 700; flex: none; }
+.rv .src i.blog { background: #03c75a; }
+.rv .src i.insta { background: linear-gradient(45deg, #f9a03f, #e1306c 55%, #833ab4); }
+.rv .src i.youtube { background: #e62117; }
+.rv .src b { color: var(--ink); font-weight: 500; }
+.rv q { display: block; font-family: var(--font-display); font-size: 17px; line-height: 1.7; quotes: "“" "”"; }
+.rv q::before { content: open-quote; color: var(--seal); font-size: 30px; line-height: 0; vertical-align: -10px; margin-right: 4px; }
+.rv q::after { content: close-quote; color: var(--seal); }
+.rv .meta2 { display: flex; justify-content: space-between; gap: 10px; margin-top: 16px; padding-top: 12px; border-top: 1px dashed var(--line); font-family: var(--font-ui); font-size: 12px; color: var(--ink-2); }
+.rv .meta2 span:last-child { color: var(--jade-2); }
+.rv .exrib { position: absolute; top: 12px; right: 12px; padding: 1px 8px; border: 1px dashed var(--ink-2); color: var(--ink-2); font-family: var(--font-ui); font-size: 11px; background: var(--bg); z-index: 1; }
+.tagbox { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 40px; padding: 30px 34px; background: var(--munsal), var(--paper); }
+.tagbox b { font-family: var(--font-display); font-size: 21px; display: block; }
+.tagbox p { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; }
+.tagbox .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.tagbox .tags span { padding: 8px 18px; background: var(--ink); color: #fff; border-radius: 999px; font-family: var(--font-ui); font-size: 14px; user-select: all; }
+
+/* ── 문의 ── */
+.contact { background: var(--ink); color: #eef3f0; position: relative; overflow: hidden; }
+.contact::before { content: ""; position: absolute; inset: 0; background: var(--munsal); opacity: .6; }
+.contact::after { content: ""; position: absolute; right: -10%; top: -30%; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(76,154,132,.35), transparent 65%); }
+.contact .wrap { position: relative; z-index: 1; display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: center; padding-block: 110px; }
+.contact .vt { writing-mode: vertical-rl; font-family: var(--font-display); font-weight: 800; font-size: clamp(40px, 5vw, 66px); line-height: 1.25; letter-spacing: .1em; }
+.contact .vt span { color: var(--jade); }
+.contact p { margin: 14px 0 0; color: #b9c7c2; max-width: 26em; }
+.contact .label { color: var(--jade); }
+.contact dl { margin: 0; display: grid; grid-template-columns: auto 1fr; }
+.contact dt, .contact dd { margin: 0; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,.14); }
+.contact dt { font-family: var(--font-ui); font-size: 12px; letter-spacing: .14em; color: #9fb2ab; padding-right: 28px; padding-top: 19px; }
+.contact dd { font-family: var(--font-display); font-weight: 700; font-size: 19px; overflow-wrap: anywhere; user-select: all; }
+.contact dd a { user-select: auto; }
+.contact dd a:hover { color: var(--jade); }
+@media (max-width: 900px) { .contact .wrap { grid-template-columns: 1fr; gap: 36px; padding-block: 80px; } .contact .vt { writing-mode: horizontal-tb; } }
+
+/* ── 카카오톡 채널 ── */
+.kakao-band { background: #fee500; color: #191919; }
+.kakao-band .wrap { display: flex; align-items: center; justify-content: space-between; gap: 18px 32px; flex-wrap: wrap; padding-block: 22px; }
+.kb-txt { display: flex; align-items: center; gap: 16px; min-width: 0; flex: 1 1 380px; }
+.kb-ico { width: 46px; height: 46px; flex: none; padding: 9px; border-radius: 14px; background: #191919; color: #fee500; }
+.kb-txt b { display: block; font-family: var(--font-display); font-size: clamp(18px, 2.2vw, 22px); }
+.kb-txt p { margin: 2px 0 0; font-size: 14px; color: #3c3a1e; }
+.kb-act { display: flex; align-items: center; gap: 18px; }
+.kb-qr { display: grid; justify-items: center; gap: 4px; }
+.kb-qr .qr { padding: 6px; background: #fff; border-radius: 8px; line-height: 0; }
+.kb-qr small { font-family: var(--font-ui); font-size: 11px; color: #3c3a1e; }
+.kakao-btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 24px; border-radius: 999px; background: #191919; color: #fee500; font-family: var(--font-ui); font-size: 15px; font-weight: 500; transition: transform .3s, box-shadow .3s; }
+.kakao-btn b { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fee500; color: #191919; font-size: 15px; line-height: 1; }
+.kakao-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(0,0,0,.5); }
+@media (max-width: 700px) { .kb-qr { display: none; } .kb-act { width: 100%; } .kakao-btn { width: 100%; justify-content: center; } }
+.kakao-fab { position: fixed; z-index: 35; left: max(16px, env(safe-area-inset-left, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px 10px 12px; border-radius: 999px; background: #fee500; color: #191919; font-family: var(--font-ui); font-size: 14px; font-weight: 500; box-shadow: 0 10px 24px -10px rgba(0,0,0,.45); transition: transform .3s, opacity .3s; }
+.kakao-fab > svg { width: 24px; height: 24px; flex: none; }
+.kakao-fab:hover { transform: translateY(-3px); }
+.kakao-fab .fab-qr { position: absolute; left: 0; bottom: calc(100% + 12px); display: grid; justify-items: center; gap: 6px; padding: 12px; border-radius: 14px; background: #fff; box-shadow: 0 16px 34px -14px rgba(0,0,0,.45); opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .3s, transform .3s; }
+.kakao-fab .fab-qr .qr { line-height: 0; }
+.kakao-fab .fab-qr small { font-size: 11px; color: #555; white-space: nowrap; }
+.kakao-fab:hover .fab-qr, .kakao-fab:focus-visible .fab-qr { opacity: 1; transform: none; }
+body.lock .kakao-fab { opacity: 0; pointer-events: none; }
+@media (hover: none), (max-width: 700px) { .kakao-fab .fab-qr { display: none; } }
+@media (max-width: 420px) { .kakao-fab span:not(.fab-qr) { font-size: 13px; } }
+
+footer.foot { background: #141d1b; color: #8fa29b; font-family: var(--font-ui); font-size: 12px; }
+footer.foot .ftop { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 24px 48px; align-items: center; padding-block: 40px 26px; border-bottom: 1px solid rgba(255,255,255,.08); }
+footer.foot .fbrand { display: grid; gap: 10px; }
+footer.foot .fbrand img { height: 26px; width: auto; max-width: 70vw; object-fit: contain; filter: brightness(0) invert(1); opacity: .85; }
+footer.foot .finfo { margin: 0; display: flex; flex-wrap: wrap; gap: 8px 32px; font-size: 13px; }
+footer.foot .finfo div { display: flex; gap: 10px; }
+footer.foot .finfo dt { color: #6f8580; }
+footer.foot .finfo dd { margin: 0; color: #d6e2dd; user-select: all; }
+footer.foot .fsns { display: flex; gap: 10px; flex-wrap: wrap; }
+footer.foot .sns { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: #d6e2dd; font-size: 13px; transition: background .3s, color .3s, border-color .3s; }
+footer.foot .sns svg { width: 18px; height: 18px; flex: none; }
+footer.foot .sns:hover { background: #fff; border-color: #fff; color: var(--ink); }
+footer.foot .fbot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding-block: 18px 86px; }
+footer.foot nav { display: flex; gap: 18px; flex-wrap: wrap; }
+footer.foot nav a:hover { color: #fff; }
+@media (max-width: 860px) { footer.foot .ftop { grid-template-columns: 1fr; } }
+</style>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="logo" href="#home" aria-label="이음오페라단 처음으로"><img src="img/logo.png" alt="이음오페라단 EUM OPERA" width="812" height="110"></a>
+    <div class="right">
+      <span class="cur-page" id="curPage">공연 일정</span>
+      <button class="mbtn" id="mbtn" aria-expanded="false" aria-controls="overlay">MENU<i><span></span></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="overlay" id="overlay" aria-hidden="true">
+  <div class="screen" aria-hidden="true"><div class="panel" style="--p:0"></div><div class="panel" style="--p:1"></div><div class="panel" style="--p:2"></div><div class="panel" style="--p:3"></div><div class="panel" style="--p:4"></div><div class="panel" style="--p:5"></div></div>
+  <nav aria-label="주 메뉴">
+      <ul id="menuList">
+        <li style="--i:0"><a href="#home">공연 일정<small>NEXT SHOW</small></a></li>
+        <li style="--i:1"><a href="#about">오페라단 소개<small>ABOUT</small></a></li>
+        <li style="--i:2"><a href="#repertoire">레퍼토리<small>REPERTOIRE</small></a></li>
+        <li style="--i:3"><a href="#history">연혁<small>HISTORY</small></a></li>
+        <li style="--i:4"><a href="#news">공지사항<small>NOTICE</small></a></li>
+        <li style="--i:5"><a href="#press">언론보도<small>PRESS</small></a></li>
+        <li style="--i:6"><a href="#reviews">관람후기<small>REVIEWS</small></a></li>
+        <li style="--i:7"><a href="#video">공연영상<small>VIDEO</small></a></li>
+        <li style="--i:8"><a href="#contact">문의<small>CONTACT</small></a></li>
+      </ul>
+      <div class="meta">055-333-1238 · jbh1986@hanmail.net ·<a class="sm" href="https://www.instagram.com/eumopera/" target="_blank" rel="noopener">Instagram ↗</a> · <a class="sm" href="https://www.youtube.com/@eumopera" target="_blank" rel="noopener">YouTube ↗</a></div>
+  </nav>
+</div>
+
+<nav class="thread" id="thread" aria-label="페이지 이동">
+  <i></i>
+  <a href="#home"><span>공연 일정</span></a>
+  <a href="#about"><span>소개</span></a>
+  <a href="#repertoire"><span>레퍼토리</span></a>
+  <a href="#history"><span>연혁</span></a>
+  <a href="#news"><span>공지사항</span></a>
+  <a href="#press"><span>언론보도</span></a>
+  <a href="#reviews"><span>관람후기</span></a>
+  <a href="#video"><span>공연영상</span></a>
+  <a href="#contact"><span>문의</span></a>
+</nav>
+
+<main>
+  <!-- ═══ 처음 · 공연 일정 ═══ -->
+  <div class="view" data-view="home" data-title="공연 일정">
+    <section class="hero" id="hero" aria-roledescription="carousel" aria-label="상설 레퍼토리">
+      <h1 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">이음오페라단 · 관객과 연주자를 잇다</h1>
+      <div class="photos" id="heroPhotos"></div>
+      <div class="txt" id="heroTxt" aria-live="polite"></div>
+      <a class="nextchip" href="#show" data-scroll><i>다음 공연</i>12.6 (일) 오후 5시 〈별주부전〉 · 김해문화의전당 <b id="dday"></b></a>
+      <div class="hfoot">
+        <div class="tabs" id="heroTabs" aria-label="작품 고르기"></div>
+        <div class="ctrl">
+          <button class="arrow" type="button" id="heroPrev" aria-label="이전 작품"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <span class="count" id="heroCount"><b>1</b> / 5</span>
+          <button class="arrow" type="button" id="heroNext" aria-label="다음 작품"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="kakao-band" aria-label="카카오톡 채널 친구 추가">
+      <div class="wrap">
+        <div class="kb-txt">
+          <svg class="kb-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c-5 0-9 3.1-9 7 0 2.5 1.7 4.7 4.2 6l-1 3.7c-.1.4.3.7.6.5l4.3-2.9c.3 0 .6.1.9.1 5 0 9-3.1 9-7s-4-7-9-7z" fill="currentColor"/></svg>
+          <div><b>공연 소식은 카카오톡으로 가장 먼저</b><p>새 공연 소식과 예매 오픈을 이음오페라단 카카오톡 채널로 보내 드립니다. 친구 추가하고 놓치지 마세요.</p></div>
+        </div>
+        <div class="kb-act">
+          <div class="kb-qr"><div class="qr" data-qr="84" role="img" aria-label="이음오페라단 카카오톡 채널 QR코드"></div><small>카메라로 찍기</small></div>
+          <a class="kakao-btn" href="https://pf.kakao.com/_TmBUxj/friend" target="_blank" rel="noopener">카카오톡 채널 추가 <b>+</b></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec band" id="show">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div><span class="label">NEXT SHOW</span><h2>공연 일정</h2></div>
+        </div>
+        <div class="feat">
+          <div class="poster t-byul reveal" role="img" aria-label="별주부전 포스터 자리"><span class="pt">Eum Opera · 2026</span><span class="pn" style="font-size:clamp(40px,5vw,60px)"><em>어린이 동화 오페라</em>별주부전</span><span class="pf">2026. 12. 6 (일) 오후 5시<br>김해문화의전당</span></div>
+          <div class="reveal">
+            <h3><small>어린이 동화 오페라</small>별주부전</h3>
+            <p class="desc">용왕님의 병을 고치려 뭍으로 나온 자라와 꾀 많은 토끼의 바닷속 모험. 우리 옛이야기 〈별주부전〉을 온 가족이 함께 즐기는 오페라로 만납니다.</p>
+            <dl class="info">
+              <dt>일시</dt><dd>2026년 12월 6일 (일) 오후 5시</dd>
+              <dt>장소</dt><dd>김해문화의전당</dd>
+              <dt>티켓</dt><dd>전석 10,000원</dd>
+              <dt>관람</dt><dd>5세 이상 · 공연시간 70분</dd>
+              <dt>예매</dt><dd class="tbd">예매처 오픈 후 안내</dd>
+            </dl>
+            <p class="credit">주최 김해시 · 주관 이음오페라단 · 후원 김해문화관광재단</p>
+            <a class="btn" href="#contact">예매 문의 →</a>
+          </div>
+        </div>
+        <p class="sub-label reveal">지난 공연</p>
+        <div class="recent">
+          <a class="reveal" href="#repertoire" data-work="4"><div class="poster img" style="--img:url('img/p-bae.jpg')"></div><div><b>창작 코믹 오페라 〈배비장전〉</b><span>2026.10.7 · 밀양아리랑아트센터 대공연장</span></div></a>
+          <a class="reveal" href="#repertoire" data-work="0"><div class="poster img" style="--img:url('img/p-sim.jpg')"></div><div><b>판소리 오페라 〈新심청전〉</b><span>2026.9.11 · 횡성 / 8.22 · 김해<br>YES24 클래식 예매율 1위</span></div></a>
+          <a class="reveal" href="#repertoire" data-work="1"><div class="poster img" style="--img:url('img/p-cin.jpg')"></div><div><b>어린이 동화 오페라 〈신데렐라〉</b><span>2026.5.23 · 김해서부문화센터 하늬홀<br>한국 초연</span></div></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <div><span class="label">EXPLORE</span><h2>이음 둘러보기</h2></div>
+          <p>오른쪽 위 메뉴에서도 모든 페이지로 갈 수 있습니다.</p>
+        </div>
+        <div class="tour">
+          <a class="reveal" href="#about" style="--img:url('img/about.jpg');--pos:center 25%"><small>ABOUT</small><b>오페라단 소개</b><span>관객과 연주자를 잇다</span></a>
+          <a class="reveal" href="#repertoire" style="--img:url('img/ph-han.jpg');--pos:50% 40%"><small>REPERTOIRE</small><b>레퍼토리</b><span>상설 레퍼토리 5편</span></a>
+          <a class="reveal" href="#history" style="--img:url('img/ph-nol.jpg')"><small>HISTORY</small><b>연혁</b><span>2020년부터 지금까지</span></a>
+          <a class="reveal" href="#reviews" style="--img:url('img/ph-cin.jpg');--pos:55% 60%"><small>REVIEWS</small><b>관람후기</b><span>관객이 남긴 이야기</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec band-2" style="padding-block:90px">
+      <div class="wrap">
+        <div class="sec-head reveal" style="margin-bottom:32px">
+          <div><span class="label">NOTICE</span><h2>새 소식</h2></div>
+          <a class="btn ghost" href="#news" style="margin:0">공지사항 전체 보기 →</a>
+        </div>
+        <ul class="nlist compact reveal" id="homeNews"></ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 소개 ═══ -->
+  <div class="view" data-view="about" data-title="오페라단 소개" hidden>
+    <section class="sec">
+      <div class="wrap">
+        <div class="about">
+          <div class="portrait reveal"><div class="ph" role="img" aria-label="이음오페라단 대표 전병하"></div></div>
+          <div class="text">
+            <span class="label reveal">ABOUT</span>
+            <h1 class="reveal" style="font-size:clamp(40px,5.6vw,72px);margin-top:16px">이음오페라단</h1>
+            <p class="lead reveal">어렵게만 느껴졌던 오페라의 문턱을 낮추고,<br><b>관객과 연주자를 잇는</b> 무대를 만듭니다.</p>
+            <div class="reveal">
+              <p>이음오페라단은 ‘관객과 연주자를 잇다’라는 뜻을 담아 2020년 ‘이음소사이어티’로 창단했고, 2022년 9월 이음오페라단으로 이름을 바꾼 뒤 같은 해 12월 경상남도 지정 전문예술단체가 되었습니다. 경남을 거점으로 정통 오페라부터 대중 친화적인 기획콘서트까지 다양한 공연을 선보입니다.</p>
+              <p>특히 한국어 창작 오페라와 자체 번안·각색한 오페라를 꾸준히 무대에 올립니다. 판소리와 벨칸토를 엮은 작품, 어린이와 가족이 함께하는 동화 오페라, 관객 참여형 공연으로 전 세대가 편안하게 즐기는 오페라를 지향합니다.</p>
+            </div>
+            <div class="sign reveal">이음오페라단 대표<b>전병하</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec band" style="padding-block:90px">
+      <div class="wrap">
+        <div class="marks">
+          <div class="reveal"><b>2020 · 2022</b><span>이음소사이어티 창단 · 이음오페라단으로 새 출발, 경상남도 지정 전문예술단체</span></div>
+          <div class="reveal"><b>5편</b><span>상설 레퍼토리</span></div>
+          <div class="reveal"><b>2024 · 2026</b><span>예술경영지원센터 유통지원사업 선정</span></div>
+          <div class="reveal"><b>YES24 1위</b><span>클래식 일간·주간 예매율 〈新심청전〉</span></div>
+        </div>
+        <div class="values" style="margin-top:56px">
+          <div class="reveal"><b>우리말로 듣는 오페라</b><p>원작을 한국어로 번안·각색해 언어의 장벽 없이 이야기에 빠져들 수 있습니다.</p></div>
+          <div class="reveal"><b>판소리와 벨칸토의 만남</b><p>전통 서사와 서양 오페라를 엮어 이음만의 융합형 무대를 만듭니다.</p></div>
+          <div class="reveal"><b>함께 노래하는 객석</b><p>어린이와 가족이 노래와 율동으로 참여하는 관객 참여형 공연을 선보입니다.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 레퍼토리 ═══ -->
+  <div class="view" data-view="repertoire" data-title="레퍼토리" hidden>
+    <section class="phead band-2">
+      <div class="wrap">
+        <div class="reveal"><span class="label">REPERTOIRE</span><h1>레퍼토리</h1><p>이음오페라단이 번안·각색하거나 창작해 무대에 올리는 작품입니다. 포스터를 누르면 작품 정보를 볼 수 있습니다.</p></div>
+        <div class="photo reveal" style="--img:url('img/ph-han.jpg');--pos:50% 40%" role="img" aria-label="헨젤과 그레텔 공연 장면"></div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:70px">
+      <div class="wrap">
+        <div class="line reveal"><div class="rail" id="rail" role="tablist" aria-label="작품 선택"></div></div>
+        <div class="detail" id="detail" role="tabpanel"></div>
+        <div class="catalog reveal"><div><b>공연장 기획공연 섭외</b><p>작품별 공연 카탈로그와 예산서를 보내드립니다. 공연 횟수와 기획 유형에 따라 협의할 수 있습니다.</p></div><a class="btn" href="#contact">섭외 문의 →</a></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 연혁 ═══ -->
+  <div class="view" data-view="history" data-title="연혁" hidden>
+    <section class="phead band-2">
+      <div class="wrap">
+        <div class="reveal"><span class="label">HISTORY</span><h1>연혁</h1><p>김해 진영에서 시작해 창원, 창녕, 함안, 밀양, 진주, 부산, 그리고 강원 횡성까지 무대를 넓혀 왔습니다. <b id="histCount"></b></p></div>
+        <div class="photo reveal" style="--img:url('img/ph-nol.jpg')" role="img" aria-label="놀부전 공연 장면"></div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:80px">
+      <div class="wrap">
+        <div class="filters reveal" id="histFilter" role="tablist" aria-label="공연 분류"></div>
+        <div class="hist" id="histList"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 공지사항 ═══ -->
+  <div class="view" data-view="news" data-title="공지사항" hidden>
+    <section class="phead band-2">
+      <div class="wrap">
+        <div class="reveal"><span class="label">NOTICE</span><h1>공지사항</h1><p>공연 안내, 오디션 모집과 결과 발표, 이음오페라단 소식을 전합니다.</p></div>
+        <div class="photo reveal" style="--img:url('img/ph-sim.jpg');--pos:60% 70%" role="img" aria-label="新심청전 공연 장면"></div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:70px">
+      <div class="wrap">
+        <div class="filters reveal" id="newsFilter" role="tablist" aria-label="공지 분류"></div>
+        <ul class="nlist reveal" id="newsList"></ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 언론보도 ═══ -->
+  <div class="view" data-view="press" data-title="언론보도" hidden>
+    <section class="phead band-2">
+      <div class="wrap">
+        <div class="reveal"><span class="label">PRESS</span><h1>언론보도</h1><p>신문과 방송에 소개된 이음오페라단의 이야기입니다. 제목을 누르면 기사 원문으로 이동합니다.</p></div>
+        <div class="photo reveal" style="--img:url('img/ph-bae.jpg')" role="img" aria-label="배비장전 공연 장면"></div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:70px">
+      <div class="wrap"><div id="pressList"></div></div>
+    </section>
+  </div>
+
+  <!-- ═══ 관람후기 ═══ -->
+  <div class="view" data-view="reviews" data-title="관람후기" hidden>
+    <section class="phead band-2">
+      <div class="wrap">
+        <div class="reveal"><span class="label">REVIEWS</span><h1>관람후기</h1><p>관객분들이 블로그와 인스타그램에 남겨 주신 후기를 모았습니다. 카드를 누르면 원문으로 이동합니다.</p></div>
+        <div class="photo reveal" style="--img:url('img/ph-cin.jpg');--pos:55% 60%" role="img" aria-label="신데렐라 공연 장면"></div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:70px">
+      <div class="wrap">
+        <div class="filters reveal" id="revFilter" role="tablist" aria-label="후기 출처"></div>
+        <div class="reviews" id="revList"></div>
+        <div class="tagbox reveal">
+          <div><b>공연 후기를 남겨 주세요</b><p>블로그나 인스타그램에 아래 해시태그와 함께 후기를 올려 주시면 이곳에 소개해 드립니다.</p></div>
+          <div class="tags"><span>#이음오페라단</span><span>#eumopera</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 공연영상 ═══ -->
+  <div class="view" data-view="video" data-title="공연영상" hidden>
+    <section class="phead band-2">
+      <div class="wrap">
+        <div class="reveal"><span class="label">VIDEO</span><h1>공연영상</h1><p>작품의 분위기를 짧게 담은 예고편과 하이라이트 영상입니다.</p></div>
+        <div class="photo reveal" style="--img:url('img/hero-bae.jpg');--pos:center 55%" role="img" aria-label="배비장전 공연 장면"></div>
+      </div>
+    </section>
+    <section class="sec" style="padding-top:80px">
+      <div class="wrap">
+        <div class="videos">
+          <a class="vid reveal" href="https://youtu.be/4_BvEuzUtPo" target="_blank" rel="noopener"><div class="thumb" style="--img:url('img/hero-sim.jpg');--pos:center 55%"><i class="play"></i></div><b>판소리 오페라 〈新심청전〉 예고편</b><span>1분</span></a>
+          <a class="vid reveal" href="https://youtu.be/3Xk7y6DOdB0" target="_blank" rel="noopener"><div class="thumb" style="--img:url('img/hero-cin.jpg');--pos:center 66%"><i class="play"></i></div><b>동화 오페라 〈신데렐라〉 예고편</b><span>1분</span></a>
+        </div>
+        <div class="catalog reveal"><div><b>공연 전체 영상이 필요하신가요?</b><p>공연장·문화재단 기획 담당자분께는 작품별 전체 공연 영상을 비공개 링크로 보내 드립니다.</p></div><a class="btn" href="#contact">전체 영상 요청 →</a></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ═══ 문의 ═══ -->
+  <div class="view" data-view="contact" data-title="문의" hidden>
+    <section class="contact">
+      <div class="wrap">
+        <h1 class="vt reveal">무대를<br><span>함께 잇다</span></h1>
+        <div class="reveal">
+          <span class="label">CONTACT</span>
+          <p>공연 예매, 공연장 기획공연 섭외, 협업 제안을 기다립니다. 작품별 공연 카탈로그와 예산서를 보내드립니다.</p>
+        </div>
+        <dl class="reveal">
+          <dt>TEL</dt><dd>055-333-1238</dd>
+          <dt>MOBILE</dt><dd>010-8787-6008</dd>
+          <dt>ADDRESS</dt><dd>경남 김해시 진영읍 여래로20번길 48, 2층</dd>
+          <dt>MAIL</dt><dd>jbh1986@hanmail.net</dd>
+          <dt>INSTAGRAM</dt><dd><a href="https://www.instagram.com/eumopera/" target="_blank" rel="noopener">@eumopera ↗</a></dd>
+          <dt>YOUTUBE</dt><dd><a href="https://www.youtube.com/@eumopera" target="_blank" rel="noopener">@eumopera ↗</a></dd>
+          <dt>KAKAO</dt><dd><a href="https://pf.kakao.com/_TmBUxj/friend" target="_blank" rel="noopener">카카오톡 채널 추가 ↗</a></dd>
+        </dl>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap ftop">
+    <div class="fbrand"><img src="img/logo.png" alt="이음오페라단" width="812" height="110"><span>경상남도 지정 전문예술단체</span></div>
+    <dl class="finfo">
+      <div><dt>대표전화</dt><dd>055-333-1238</dd></div>
+      <div><dt>이메일</dt><dd>jbh1986@hanmail.net</dd></div>
+      <div><dt>소재지</dt><dd>경남 김해시 진영읍 여래로20번길 48, 2층</dd></div>
+    </dl>
+    <div class="fsns">
+      <a class="sns" href="https://www.youtube.com/@eumopera" target="_blank" rel="noopener" aria-label="이음오페라단 유튜브 채널 (새 창)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="currentColor"/><path d="M10 9l5 3-5 3z" fill="#141d1b"/></svg>YouTube</a>
+      <a class="sns" href="https://www.instagram.com/eumopera/" target="_blank" rel="noopener" aria-label="이음오페라단 인스타그램 (새 창)"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>Instagram</a>
+      <a class="sns" href="https://pf.kakao.com/_TmBUxj/friend" target="_blank" rel="noopener" aria-label="이음오페라단 카카오톡 채널 (새 창)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c-5 0-9 3.1-9 7 0 2.5 1.7 4.7 4.2 6l-1 3.7c-.1.4.3.7.6.5l4.3-2.9c.3 0 .6.1.9.1 5 0 9-3.1 9-7s-4-7-9-7z" fill="currentColor"/></svg>KakaoTalk</a>
+    </div>
+  </div>
+  <div class="wrap fbot">
+    <nav aria-label="하단 메뉴"><a href="#about">소개</a><a href="#repertoire">레퍼토리</a><a href="#history">연혁</a><a href="#news">공지사항</a><a href="#press">언론보도</a><a href="#reviews">관람후기</a><a href="#video">영상</a><a href="#contact">문의</a></nav>
+    <span>© 2020–2026 이음오페라단 EUM OPERA</span>
+  </div>
+</footer>
+
+<a class="kakao-fab" href="https://pf.kakao.com/_TmBUxj/friend" target="_blank" rel="noopener" aria-label="이음오페라단 카카오톡 채널 친구 추가 (새 창)">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5c-5 0-9 3.1-9 7 0 2.5 1.7 4.7 4.2 6l-1 3.7c-.1.4.3.7.6.5l4.3-2.9c.3 0 .6.1.9.1 5 0 9-3.1 9-7s-4-7-9-7z" fill="currentColor"/></svg>
+  <span>카카오톡 채널 추가</span>
+  <span class="fab-qr" aria-hidden="true"><span class="qr" data-qr="132"></span><small>휴대폰 카메라로 찍어 친구 추가</small></span>
+</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// 카카오톡 채널 QR코드
+(function () {
+  if (!window.QRCode) return;
+  document.querySelectorAll('[data-qr]').forEach(function (el) {
+    var s = +el.dataset.qr;
+    new QRCode(el, { text: 'https://pf.kakao.com/_TmBUxj/friend', width: s, height: s, colorDark: '#191919', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+    el.removeAttribute('title');
+  });
+})();
+</script>
+<script>
+(function () {
+  var body = document.body, btn = document.getElementById('mbtn'), ov = document.getElementById('overlay');
+  var views = document.querySelectorAll('.view'), names = Array.prototype.map.call(views, function (v) { return v.dataset.view; });
+  var curPage = document.getElementById('curPage'), thread = document.getElementById('thread'), dots = thread.querySelectorAll('a');
+  var menuLinks = document.querySelectorAll('#menuList a'), current = null;
+
+  function setMenu(open) { body.classList.toggle('lock', open); btn.setAttribute('aria-expanded', open); ov.setAttribute('aria-hidden', !open); }
+  btn.addEventListener('click', function () { setMenu(!body.classList.contains('lock')); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+
+  // 페이지 전환
+  function show(name, animate) {
+    if (names.indexOf(name) < 0) name = 'home';
+    var wasOpen = body.classList.contains('lock');
+    if (name === current) { setMenu(false); return; }
+    current = name;
+    views.forEach(function (v) {
+      var on = v.dataset.view === name;
+      v.hidden = !on; v.classList.remove('enter');
+      if (on && animate) { void v.offsetWidth; v.classList.add('enter'); }
+      if (on) curPage.textContent = v.dataset.title;
+    });
+    menuLinks.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + name); });
+    dots.forEach(function (a) { a.classList.toggle('on', a.getAttribute('href') === '#' + name); });
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    window.scrollTo(0, 0);
+    if (wasOpen) setTimeout(function () { setMenu(false); }, 120);
+    prepReveal(document.querySelector('.view[data-view="' + name + '"]'));
+    onScroll();
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var h = a.getAttribute('href').slice(1);
+    if (!h) { e.preventDefault(); return; }
+    if (a.hasAttribute('data-scroll')) { e.preventDefault(); var t = document.getElementById(h); if (t) t.scrollIntoView({ behavior: 'smooth' }); return; }
+    if (names.indexOf(h) >= 0) { e.preventDefault(); if (location.hash !== '#' + h) history.replaceState(null, '', '#' + h); show(h, true); }
+  });
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1), true); });
+
+  // D-day
+  var d = Math.ceil((new Date(2026, 11, 6) - new Date().setHours(0, 0, 0, 0)) / 864e5);
+  document.getElementById('dday').textContent = d > 0 ? 'D-' + d : d === 0 ? '오늘 공연' : '';
+
+  // 레퍼토리
+  var works = [
+    { t: '新심청전', g: '판소리 오페라', img: 'img/p-sim.jpg', sub: '사랑의 묘약 × 심청가',
+      d: '이탈리아 벨칸토 오페라와 한국 판소리를 결합한 융합형 작품입니다. 도니제티의 희극 오페라 「사랑의 묘약」과 판소리 「심청가」를 엮어 새로운 서사로 재구성했습니다. 우아한 오페라와 서정적인 판소리가 교차하고, 극과 호흡하는 관객 참여로 누구나 쉽고 생동감 있게 즐길 수 있습니다.',
+      a: '2026 예술경영지원센터 지역유통지원사업 선정 · YES24 클래식 예매율 1위',
+      s: [['원곡', '사랑의 묘약(G. Donizetti), 심청가'], ['번안·각색', '이음오페라단'], ['공연시간', '70분 (인터미션 없음)'], ['관람연령', '초등학생 이상'], ['참여인원', '출연 7~8명 · 스태프 12명']], v: 'https://youtu.be/4_BvEuzUtPo' },
+    { t: '신데렐라', g: '어린이 동화 오페라', img: 'img/p-cin.jpg', sub: '폴린 비아르도 원작 · 한국 초연',
+      d: '전 세계가 사랑하는 동화 〈신데렐라〉. 프랑스 여성 작곡가 폴린 비아르도의 오페라 〈Cendrillon〉을 한국어로 새롭게 번안해 언어의 장벽을 낮췄습니다. 프랑스적인 유머와 이탈리아 벨칸토 스타일이 어우러집니다.',
+      a: '2026 이음오페라단 한국 초연',
+      s: [['원곡', 'P. Viardot 〈Cendrillon〉'], ['번안·각색', '이음오페라단'], ['공연시간', '70분 (인터미션 없음)'], ['관람연령', '5세 이상'], ['참여인원', '출연 13~15명 · 스태프 15명']], v: 'https://youtu.be/3Xk7y6DOdB0' },
+    { t: '놀부전', g: '창작 코믹 가족 오페라', img: 'img/p-nol.jpg', sub: '작곡 박창민 · 대본 김재희',
+      d: '착하지만 무능한 흥부와 유능하지만 못된 놀부. 판소리계 소설 「흥부전」을 놀부의 시선으로 새롭게 각색했습니다. 권선징악의 교훈에 시대적 풍자와 해학을 더해 재미와 감동을 전합니다.',
+      a: '2024 예술경영지원센터 유통지원사업 선정',
+      s: [['원작', '판소리 소설 〈흥부전〉'], ['작곡·대본', '박창민 · 김재희'], ['공연시간', '75분 (인터미션 없음)'], ['관람연령', '5세 이상'], ['참여인원', '출연 10명 · 스태프 15명']], v: '' },
+    { t: '헨젤과 그레텔', g: '어린이 동화 오페라', img: 'img/p-han.jpg', sub: '훔퍼딩크 원작 · 관객참여형',
+      d: '그림형제의 동화를 원작으로 한 훔퍼딩크의 오페라를 자체 번안·각색했습니다. 숲으로 딸기를 따러 간 남매의 모험을 따라, 관객이 노래와 율동까지 함께하는 관객참여형 가족 오페라입니다.',
+      a: '',
+      s: [['원곡', 'E. Humperdinck 〈헨젤과 그레텔〉'], ['번안·각색', '이음오페라단'], ['공연시간', '75분 (인터미션 없음)'], ['관람연령', '5세 이상'], ['참여인원', '출연 10명 · 스태프 15명']], v: '' },
+    { t: '배비장전', g: '창작 코믹 오페라', img: 'img/p-bae.jpg', sub: '작곡 박창민 · 대본 강문숙',
+      d: '조선 후기 제주를 배경으로 한 풍자소설 〈배비장전〉이 오페라로 태어났습니다. 양반들의 위선과 인간 본연의 욕망을 재치 있고 과감하게 꼬집는 웃음 가득한 무대입니다.',
+      a: '',
+      s: [['원작', '판소리 소설 〈배비장전〉'], ['작곡·대본', '박창민 · 강문숙'], ['공연시간', '75분 (인터미션 없음)'], ['관람연령', '초등학생 이상'], ['참여인원', '출연 15명 · 스태프 15명']], v: '' }
+  ];
+  var rail = document.getElementById('rail'), detail = document.getElementById('detail');
+  works.forEach(function (w, i) {
+    var b = document.createElement('button');
+    b.className = 'hang'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', i === 0);
+    b.innerHTML = '<span class="poster img" style="display:block;--img:url(\'' + w.img + '\')" role="img" aria-label="' + w.t + ' 포스터"></span><span class="cap">' + w.t + '<span>' + w.sub + '</span></span>';
+    b.addEventListener('click', function () { pick(i); });
+    rail.appendChild(b);
+  });
+  function pick(i) {
+    var w = works[i];
+    rail.querySelectorAll('.hang').forEach(function (h, j) { h.setAttribute('aria-selected', j === i); });
+    detail.classList.remove('swap'); void detail.offsetWidth; detail.classList.add('swap');
+    detail.innerHTML = '<div><div class="genre">' + w.g + '</div><h3>' + w.t + '</h3><p>' + w.d + '</p><span class="award">' + w.a + '</span></div>' +
+      '<div><dl>' + w.s.map(function (r) { return '<dt>' + r[0] + '</dt><dd>' + r[1] + '</dd>'; }).join('') + '</dl>' +
+      '<div class="btns">' + (w.v ? '<a class="btn" href="' + w.v + '" target="_blank" rel="noopener">예고편 보기 ↗</a>' : '') + '<a class="btn' + (w.v ? ' ghost' : '') + '" href="#contact">섭외 · 전체 영상 문의</a></div></div>';
+  }
+  pick(0);
+
+  // 첫 화면: 레퍼토리 사진이 7초마다 넘어간다 (works 와 같은 순서)
+  var HERO = [
+    { d: '도니제티의 벨칸토 오페라와 판소리 「심청가」를 엮어 새로운 이야기로 짠 이음오페라단의 대표작입니다.', a: 'YES24 클래식 예매율 1위', m: ['70분', '초등학생 이상'], ph: 'img/hero-sim.jpg', pos: 'center 55%' },
+    { d: '프랑스 작곡가 폴린 비아르도의 〈Cendrillon〉을 우리말로 옮겨 온 가족이 함께 보는 동화 오페라입니다.', a: '2026 한국 초연', m: ['70분', '5세 이상'], ph: 'img/hero-cin.jpg', pos: 'center 66%' },
+    { d: '「흥부전」을 놀부의 눈으로 다시 쓴 작품으로, 풍자와 해학 속에 권선징악의 교훈을 담았습니다.', a: '2024 예술경영지원센터 유통지원 선정', m: ['75분', '5세 이상'], ph: 'img/hero-nol.jpg', pos: 'center 72%' },
+    { d: '숲으로 딸기를 따러 간 남매의 모험을 관객이 노래와 율동으로 함께하는 관객참여형 가족 오페라입니다.', a: '관객참여형 공연', m: ['75분', '5세 이상'], ph: 'img/hero-han.jpg', pos: 'center 62%' },
+    { d: '조선 후기 제주를 배경으로 양반의 위선과 사람의 욕망을 재치 있게 꼬집는 웃음 가득한 무대입니다.', a: '', m: ['75분', '초등학생 이상'], ph: 'img/hero-bae.jpg', pos: 'center 55%' }
+  ];
+  (function () {
+    var N = HERO.length, MS = 7000, i = 0, t = null, paused = false, prog = null;
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hero = document.getElementById('hero'), photos = document.getElementById('heroPhotos'), txt = document.getElementById('heroTxt');
+    var tabs = document.getElementById('heroTabs'), count = document.getElementById('heroCount');
+    photos.innerHTML = HERO.map(function (h, j) { return '<div class="layer' + (j ? '' : ' on') + '" style="--img:url(\'' + h.ph + '\');--pos:' + h.pos + '"></div>'; }).join('');
+    tabs.innerHTML = works.map(function (w) { return '<button class="tab" type="button"><i class="tb"><b></b></i><span class="tt"><small>' + w.g + '</small>' + w.t + '</span></button>'; }).join('');
+    var layers = photos.children, tb = tabs.children;
+    function render() {
+      var w = works[i], h = HERO[i];
+      Array.prototype.forEach.call(layers, function (l, j) { l.classList.toggle('on', j === i); });
+      Array.prototype.forEach.call(tb, function (b, j) { b.classList.toggle('on', j === i); b.setAttribute('aria-current', j === i ? 'true' : 'false'); var x = b.querySelector('.tb b'); x.style.transition = 'none'; x.style.transform = 'scaleX(0)'; });
+      count.innerHTML = '<b>' + (i + 1) + '</b> / ' + N;
+      txt.classList.remove('swap');
+      txt.innerHTML = '<span class="genre">REPERTOIRE · ' + w.g + '</span><h2>' + w.t + '</h2><p class="desc">' + h.d + '</p>' +
+        '<div class="hmeta"><span>공연시간 ' + h.m[0] + '</span><span>관람 ' + h.m[1] + '</span></div>' + (h.a ? '<span class="award">' + h.a + '</span>' : '') +
+        '<div class="btns"><a class="btn" href="#repertoire" data-work="' + i + '">작품 자세히 보기 →</a>' + (w.v ? '<a class="btn ghost" href="' + w.v + '" target="_blank" rel="noopener">예고편 ↗</a>' : '') + '</div>';
+      void txt.offsetWidth; txt.classList.add('swap');
+      prog = tb[i].querySelector('.tb b'); void prog.offsetWidth;
+      if (!paused && !reduce) { prog.style.transition = 'transform ' + MS + 'ms linear'; prog.style.transform = 'scaleX(1)'; }
+    }
+    function go(k) { i = (k + N) % N; render(); clearTimeout(t); if (!paused && !reduce) t = setTimeout(function () { go(i + 1); }, MS); }
+    function pause(on) {
+      paused = on;
+      if (on) { clearTimeout(t); var cur = getComputedStyle(prog).transform; prog.style.transition = 'none'; prog.style.transform = cur; }
+      else go(i);
+    }
+    document.getElementById('heroPrev').addEventListener('click', function () { go(i - 1); });
+    document.getElementById('heroNext').addEventListener('click', function () { go(i + 1); });
+    Array.prototype.forEach.call(tb, function (b, j) { b.addEventListener('click', function () { go(j); }); });
+    document.addEventListener('click', function (e) { var a = e.target.closest('[data-work]'); if (a) pick(+a.dataset.work); });
+    hero.addEventListener('mouseenter', function () { pause(true); });
+    hero.addEventListener('mouseleave', function () { pause(false); });
+    document.addEventListener('keydown', function (e) {
+      if (current !== 'home' || body.classList.contains('lock')) return;
+      if (e.key === 'ArrowLeft') go(i - 1);
+      if (e.key === 'ArrowRight') go(i + 1);
+    });
+    var sx = null;
+    hero.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    hero.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) go(dx < 0 ? i + 1 : i - 1);
+    });
+    go(0);
+  })();
+
+  /* ════════════════════════════════════════════
+     ▼ 공지사항 · 언론보도 · 관람후기 내용
+     새 글은 각 목록 맨 위에 { ... }, 한 덩어리를 복사해 추가하면 됩니다.
+     ════════════════════════════════════════════ */
+
+  // 연혁: NAS 'Z:\이음오페라단\연주' 공연 폴더 기준. k = op(오페라·음악극) | con(음악회) | cho(합창·교육) | org(단체 소식, 모든 분류에 표시), tag = 붉은 표시, next: true 면 다가오는 공연
+  var HISTORY = [
+    { d: '2026.12.17', k: 'op', t: '〈바흐의 커피칸타타〉', v: '진영문화센터 공연장', next: true },
+    { d: '2026.12.06', k: 'op', t: '어린이 동화 오페라 〈별주부전〉', v: '김해문화의전당', next: true },
+    { d: '2026.11.21', k: 'cho', t: '진영소리합창단 제6회 정기연주회', v: '진영문화센터 공연장', next: true },
+    { d: '2026.10.23', k: 'con', t: '클래식에어라인 [미국 · 영국편]', v: '남명아트홀' },
+    { d: '2026.10.13', k: 'op', t: '대구국제오페라축제 · 대구글로벌오페라마켓 창작오페라 쇼케이스 〈신데렐라〉', v: '대구 호텔수성', tag: '5개 단체 선발' },
+    { d: '2026.10.07', k: 'op', t: '창작 코믹 오페라 〈배비장전〉', v: '밀양아리랑아트센터' },
+    { d: '2026.09.11', k: 'op', t: '판소리 오페라 〈新심청전〉', v: '횡성문화예술회관', tag: '예경 선정' },
+    { d: '2026.08.22', k: 'op', t: '판소리 오페라 〈新심청전〉', v: '김해서부문화센터 하늬홀', tag: '예경 선정' },
+    { d: '2026.07.24', k: 'op', t: '창작 코믹 오페라 〈놀부전〉', v: '창원성산아트홀' },
+    { d: '2026.05.23', k: 'op', t: '동화 오페라 〈신데렐라〉', v: '김해서부문화센터 하늬홀', tag: '한국 초연' },
+    { d: '2026.04', when: '04~10', k: 'cho', t: '꿈다락 토요문화학교 〈룰루랄라 오페라〉', v: '김해지혜의바다도서관' },
+    { d: '2025.12.25', k: 'con', t: '클레이아크 크리스마스 연주', v: '클레이아크김해미술관' },
+    { d: '2025.12.24', k: 'con', t: '성악가와 함께하는 행복한 동요 콘서트', v: '남명아트홀' },
+    { d: '2025.12.07', k: 'cho', t: '진영소리합창단 제5회 정기연주회', v: '진영문화센터 공연장' },
+    { d: '2025.11.30', k: 'op', t: '동화 오페라 〈헨젤과 그레텔〉', v: '김해문화의전당 누리홀' },
+    { d: '2025.10.22', k: 'op', t: '창작 코믹 오페라 〈배비장전〉', v: '김해서부문화센터 하늬홀' },
+    { d: '2025.09.05', k: 'op', t: '렉처콘서트 〈바흐의 커피칸타타〉', v: '진영문화센터 공연장' },
+    { d: '2025.07.11', k: 'op', t: '판소리 오페라 〈新심청전〉', v: '김해서부문화센터 하늬홀' },
+    { d: '2025.07.04', k: 'op', t: '판소리 오페라 〈新심청전〉', v: '김해문화의전당 누리홀' },
+    { d: '2025.06.13', k: 'op', t: '번안 오페라 〈버섯비빔밥〉', v: '진영문화센터 공연장' },
+    { d: '2025.05.23', k: 'con', t: '클래식에어라인 [한국편]', v: '진영문화센터 공연장' },
+    { d: '2025.04', when: '04~10', k: 'cho', t: '꿈다락 토요문화학교 〈룰루랄라 오페라〉', v: '깨어있는시민 문화체험전시관(봉하마을)' },
+    { d: '2024.12.25', k: 'con', t: '클레이아크 크리스마스 연주', v: '클레이아크김해미술관' },
+    { d: '2024.11.27', k: 'con', t: '한중교류음악회 〈어울림〉', v: '진영문화센터 공연장' },
+    { d: '2024.11.23', k: 'cho', t: '이음합창단 제4회 정기연주회', v: '진영문화센터 공연장' },
+    { d: '2024.11.05', k: 'con', t: '교육청 찾아가는 음악회', v: '유목초등학교' },
+    { d: '2024.10.17', k: 'op', t: '창작 코믹 오페라 〈놀부전〉', v: '창녕문화예술회관' },
+    { d: '2024.09.28', k: 'op', t: '어린이 오페라 〈헨젤과 그레텔〉', v: '진영문화센터 공연장' },
+    { d: '2024.08.10', k: 'op', t: '번안 오페라 〈인생은 타이밍〉', v: '진영문화센터 공연장' },
+    { d: '2024.07.22', k: 'con', t: '찾아가는 음악회', v: '김해시장애인근로작업장' },
+    { d: '2024.07.20', k: 'op', t: '창작 코믹 오페라 〈놀부전〉', v: '함안문화예술회관', tag: '예경 선정' },
+    { d: '2024.06.21', k: 'op', t: '창작음악극 〈외톨바위는 어디에서 왔을까?〉', v: '김해문화의전당 누리홀' },
+    { d: '2024.05.31', k: 'con', t: '클래식에어라인 [독일편]', v: '진영문화센터 공연장' },
+    { d: '2024.05.27', k: 'con', t: '찾아가는 음악회', v: '도림원' },
+    { d: '2024.04', when: '04~10', k: 'cho', t: '꿈다락 토요문화학교 〈룰루랄라 오페라〉', v: '깨어있는시민 문화체험전시관(봉하마을)' },
+    { d: '2023.12.28', k: 'op', t: '창작음악극 〈외톨바위는 어디에서 왔을까?〉', v: '진영문화센터 공연장' },
+    { d: '2023.12.22', k: 'con', t: '클래식에어라인 [이탈리아편]', v: '진영문화센터 공연장' },
+    { d: '2023.12.18', k: 'con', t: '송년음악회', v: '진영문화센터 공연장' },
+    { d: '2023.11.04', k: 'cho', t: '진영이음합창단 제3회 정기연주회', v: '진영문화센터 공연장' },
+    { d: '2023.10.31', k: 'con', t: '찾아가는 음악회', v: '유목초등학교' },
+    { d: '2023.10.26', k: 'op', t: '창작 코믹 오페라 〈놀부전〉', v: '진영문화센터 공연장' },
+    { d: '2023.10.21', k: 'op', t: '창작 코믹 오페라 〈놀부전〉', v: '김해서부문화센터 하늬홀' },
+    { d: '2023.10.15', k: 'con', t: '감나무예술제', v: '진영문화센터' },
+    { d: '2023.09.23', k: 'con', t: '진영역사공원 야외공연', v: '진영역사공원' },
+    { d: '2023.09.22', k: 'con', t: '어쩌다 마주친 클래식', v: '진영문화센터 공연장' },
+    { d: '2023.09.09', k: 'con', t: '제2회 닷옴예술제', v: '봉하마을 문화체험전시관' },
+    { d: '2023.06.07', k: 'op', t: '제819회 금정수요음악회 · 콘서트 오페라 〈버섯피자〉', v: '금정문화회관' },
+    { d: '2023.05.26', k: 'op', t: '오페라 〈코지 판 투테〉', v: '진영문화센터 공연장' },
+    { d: '2023.03.31', k: 'op', t: '오페라 〈춘향전〉', v: '진영문화센터 공연장' },
+    { d: '2022.12.21', k: 'org', t: '경상남도 지정 전문예술단체 지정', v: '경상남도' },
+    { d: '2022.12.16', k: 'con', t: '장애인과 함께하는 제1회 닷옴예술제', v: '진영문화센터 공연장' },
+    { d: '2022.12.03', k: 'cho', t: '진영이음합창단 제2회 정기연주회', v: '진영문화센터 공연장' },
+    { d: '2022.10.07', k: 'con', t: '어쩌다 마주친 클래식', v: '진영문화센터 공연장' },
+    { d: '2022.09.23', k: 'con', t: '찾아가는 음악회', v: '이레직업재활시설 · 함안' },
+    { d: '2022.09.16', k: 'con', t: '찾아가는 음악회', v: '직업재활시설 미리벌' },
+    { d: '2022.08.24', k: 'con', t: '찾아가는 음악회', v: '한림함께하는일터' },
+    { d: '2022.08.17', k: 'con', t: '찾아가는 음악회', v: '플러스하트리더스쿨 지역아동센터' },
+    { d: '2022.09.02', k: 'org', t: '이음소사이어티에서 이음오페라단으로 이름 변경', v: '' },
+    { d: '2022.07.22', k: 'op', t: '오페라 〈사랑의 묘약〉', v: '진영문화센터 공연장' },
+    { d: '2022.06.29', k: 'con', t: '제783회 금정수요음악회 · 〈이음소사이어티〉', v: '금정문화회관 은빛샘홀' },
+    { d: '2022.04.28', k: 'op', t: '오페라 〈버섯피자〉', v: '진영문화센터 공연장' },
+    { d: '2021.12.18', k: 'con', t: '찾아가는 음악회', v: '김해서부장애인자립생활센터' },
+    { d: '2021.11.27', k: 'cho', t: '진영이음합창단 창단연주회', v: '진영문화센터 공연장' },
+    { d: '2021.11.19', k: 'op', t: '오페라 〈라 트라비아타〉', v: '진영문화센터 공연장' },
+    { d: '2021.11.06', k: 'con', t: '찾아가는 음악회', v: '진영글로벌센터' },
+    { d: '2021.10.22', k: 'con', t: '찾아가는 음악회', v: '진영장애인작업장' },
+    { d: '2021.09.24', k: 'con', t: '어쩌다 마주친 클래식', v: '진영문화센터 공연장' },
+    { d: '2021.05.08', k: 'con', t: '이음 소사이어티 with 모차르트', v: '김해문화의전당' },
+    { d: '2021.03.27', k: 'con', t: '라 보엠 갈라 콘서트', v: '진영문화센터 공연장' },
+    { d: '2021.01.22', k: 'con', t: '겨울의 길목에서', v: '아트홀 라보엠' },
+    { d: '2020', k: 'org', t: '이음소사이어티 창단', v: '경상남도 김해' }
+  ];
+  var histList = document.getElementById('histList');
+  function drawHist(k) {
+    var years = {}, order = [];
+    HISTORY.filter(function (h) { return k === 'all' || h.k === k || h.k === 'org'; }).forEach(function (h) {
+      var y = h.d.slice(0, 4); if (!years[y]) { years[y] = []; order.push(y); } years[y].push(h);
+    });
+    histList.innerHTML = order.map(function (y) {
+      return '<div class="yr"><h3>' + y + '</h3><ol>' + years[y].map(function (h) {
+        return '<li class="' + (h.k === 'op' || h.k === 'org' ? 'op' : '') + (h.next ? ' next' : '') + '"><time>' + (h.when || (h.d.length > 4 ? h.d.slice(5) : '—')) + '</time><span class="w">' + h.t + (h.tag ? '<span class="tag">' + h.tag + '</span>' : '') + (h.next ? '<span class="tag">예정</span>' : '') + '</span><span class="v">' + h.v + '</span></li>';
+      }).join('') + '</ol></div>';
+    }).join('');
+  }
+  var past = HISTORY.filter(function (h) { return !h.next && h.k !== 'org'; });
+  document.getElementById('histCount').textContent = '2021년부터 지금까지 ' + past.length + '번의 무대에 올랐습니다.';
+  var hKeys = ['all', 'op', 'con', 'cho'];
+  filters(document.getElementById('histFilter'), hKeys, ['전체', '오페라 · 음악극', '음악회', '합창 · 교육'], hKeys.map(function (k) { return k === 'all' ? past.length : past.filter(function (h) { return h.k === k; }).length; }), drawHist);
+  drawHist('all');
+
+  // 공지사항: cat = 공연 | 오디션 | 결과발표 | 소식, pin: true 면 맨 위 고정, example: true 면 '예시' 표시
+  var NOTICES = [
+    { cat: '공연', pin: true, date: '2026.11.01', title: '어린이 동화 오페라 〈별주부전〉 공연 안내',
+      body: ['이음오페라단의 새 어린이 동화 오페라 〈별주부전〉이 김해문화의전당 무대에 오릅니다. 우리 옛이야기를 온 가족이 함께 즐길 수 있는 오페라로 만나 보세요.', '예매처는 열리는 대로 이 공지에 안내해 드립니다.'],
+      info: [['일시', '2026년 12월 6일 (일) 오후 5시'], ['장소', '김해문화의전당'], ['티켓', '전석 10,000원'], ['관람연령', '5세 이상'], ['공연시간', '70분'], ['주최 · 주관', '김해시 · 이음오페라단'], ['후원', '김해문화관광재단'], ['문의', '010-8787-6008']] },
+    { cat: '공연', date: '2026.11.01', title: '〈바흐의 커피칸타타〉 공연 안내',
+      body: ['바흐의 〈커피칸타타〉가 진영문화센터 공연장 무대에 오릅니다. 커피를 사랑한 딸과 걱정 많은 아버지의 유쾌한 이야기를 음악과 함께 만나 보세요.', '공연 시간과 관람 방법은 확정되는 대로 이 공지에 안내해 드립니다.'],
+      info: [['일시', '2026년 12월 17일 (목)'], ['장소', '진영문화센터 공연장'], ['문의', '055-333-1238']] },
+    { cat: '공연', date: '2026.11.01', title: '진영소리합창단 제6회 정기연주회 안내',
+      body: ['진영소리합창단의 여섯 번째 정기연주회가 열립니다. 한 해 동안 함께 노래해 온 단원들의 무대에 많은 관심 부탁드립니다.', '공연 시간과 관람 방법은 확정되는 대로 이 공지에 안내해 드립니다.'],
+      info: [['일시', '2026년 11월 21일 (토)'], ['장소', '진영문화센터 공연장'], ['문의', '055-333-1238']] },
+    { cat: '소식', date: '2026.08', title: '판소리 오페라 〈新심청전〉 YES24 클래식 부문 일간·주간 예매율 1위',
+      body: ['8월 22일 김해서부문화센터 하늬홀 공연을 앞두고 〈新심청전〉이 YES24 클래식 부문 일간·주간 예매율 1위에 올랐습니다. 관심 가져 주신 관객 여러분께 감사드립니다.'] },
+    { cat: '소식', date: '2026.06', title: '〈新심청전〉 2026 예술경영지원센터 공연예술 지역유통지원사업 선정',
+      body: ['판소리 오페라 〈新심청전〉이 2026년 예술경영지원센터 공연예술 지역유통지원사업에 선정되어 김해와 강원 횡성 무대에 올랐습니다.'] }
+    // 오디션 공지 예: { cat: '오디션', date: '2027.01.10', title: '...', body: ['...'], info: [['모집 분야', '...'], ['접수 기간', '...']], link: ['지원서 작성하기', 'https://...'] }
+  ];
+
+  // 언론보도: 최신 기사를 맨 위에
+  var PRESS = [
+    { date: '2026.10.14', outlet: '한국경제', title: '성악가 발굴부터 창작 작품 해외 유통까지…대구글로벌오페라마켓 폐막', work: '창작오페라 쇼케이스 선정', url: 'https://www.hankyung.com/article/202610137442i' },
+    { date: '2026.09.30', outlet: '불교방송', title: "[한주의 컬처픽] 축제의 계절 10월, 부산·경남은 영화-음악-공연으로 '풍성'", work: '〈배비장전〉', url: 'https://news.bbsi.co.kr/news/articleView.html?idxno=4109313' },
+    { date: '2026.09.07', outlet: '뉴시스', title: "'오페라와 판소리 만남'…횡성군 '신심청전'", work: '〈新심청전〉', url: 'https://www.newsis.com/view/NISX20260907_0003779065' },
+    { date: '2026.09.07', outlet: '국제뉴스', title: "횡성문화관광재단, 11일 횡성문화예술회관서 판소리 오페라 '신심청전' 공연", work: '〈新심청전〉', url: 'https://www.gukjenews.com/news/articleView.html?idxno=3686617' },
+    { date: '2026.09.07', outlet: '전국매일신문', title: "오페라와 판소리의 만남, 횡성서 만나는 '신심청전'", work: '〈新심청전〉', url: 'https://www.jeonmae.co.kr/news/articleView.html?idxno=1290669' },
+    { date: '2026.08.13', outlet: '뉴스경남', title: "'경남도민예술단', 문화소외지역 찾아 감동의 무대 선사", work: '경남도민예술단 선정', url: 'https://www.newsgn.com/news/articleView.html?idxno=567736' },
+    { date: '2026.08.13', outlet: '헤럴드경제', title: '경남도민예술단, 문화소외지역 찾아 감동의 무대 펼친다', work: '경남도민예술단 선정', url: 'https://v.daum.net/v/20260813095252106' },
+    { date: '2026.07.12', outlet: '창원일보', title: '김해서부문화센터, 이음오페라단 창작판페라 新심청전 8월 22일 무대 올라', work: '〈新심청전〉', url: 'https://m.changwonilbo.com/337555' },
+    { date: '2026.07.01', outlet: '경남도민일보', title: '김해 이음오페라단 창작판페라 〈新심청전〉 공연', work: '〈新심청전〉', url: 'https://www.idomin.com/news/articleView.html?idxno=2009214' },
+    { date: '2026.06.30', outlet: '뉴스경남', title: "이음오페라단 창작판페라 '新심청전', 공연예술지역유통지원사업 선정으로 다시 무대 올라", work: '〈新심청전〉', url: 'https://www.newsgn.com/news/articleView.html?idxno=559823' },
+    { date: '2026.06.30', outlet: '김해뉴스', title: "김해서부문화센터, 이음오페라단 창작판페라 '新심청전' 8월 무대 올려", work: '〈新심청전〉', url: 'http://www.gimhaenews.co.kr/news/articleView.html?idxno=53624' },
+    { date: '2026.06.30', outlet: '국제뉴스', title: "김해서부문화센터, 창작판페라 '심청전' 공연", work: '〈新심청전〉', url: 'https://www.gukjenews.com/news/articleView.html?idxno=3621943' },
+    { date: '2026.05.20', outlet: '불교방송', title: '[한주의 컬처픽] 세계적인 연주자들 부산서 공연', work: '〈신데렐라〉 한국 초연', url: 'https://news.bbsi.co.kr/news/articleView.html?idxno=4084653' },
+    { date: '2026.04.28', outlet: '뉴스경남', title: '김해 이음오페라단, 가족과 함께하는 클래식 음악 수업 수강생 모집', work: '교육 프로그램', url: 'https://www.newsgn.com/news/articleView.html?idxno=549376' },
+    { date: '2025.11.27', outlet: '뉴스경남', title: "이음오페라단, 온가족 함께 즐기는 어린이 오페라 '헨젤과 그레텔' 김해 공연", work: '〈헨젤과 그레텔〉', url: 'https://www.newsgn.com/news/articleView.html?idxno=519674' },
+    { date: '2024.08.30', outlet: '뉴시스', title: '경남도민예술단 문화취약지 순회공연, 9월 6일 사천서 시작', work: '경남도민예술단 선정', url: 'https://v.daum.net/v/20240830153533859' },
+    { date: '2024.08.29', outlet: '뉴스경남', title: "가을바람과 함께 '도민예술단 순회공연'", work: '경남도민예술단 선정', url: 'https://www.newsgn.com/news/articleView.html?idxno=435840' },
+    { date: '2024.08.18', outlet: '뉴스경남', title: '함안문화예술회관, 여름 공연도 인기몰이 매진행렬 이어가', work: '〈놀부전〉 전석 매진', url: 'https://www.newsgn.com/news/articleView.html?idxno=433669' },
+    { date: '2024.08.18', outlet: '이뉴스투데이', title: '함안문화예술회관, 여름 공연도 인기몰이 매진행렬 계속', work: '〈놀부전〉 전석 매진', url: 'http://www.enewstoday.co.kr/news/articleView.html?idxno=2165200' },
+    { date: '2024.07.14', outlet: '뉴스경남', title: "함안문화예술회관, 창작 코믹오페라 '놀부전' 공연 개최", work: '〈놀부전〉', url: 'https://www.newsgn.com/news/articleView.html?idxno=428490' },
+    { date: '2024.07.11', outlet: '경남도민신문', title: "함안문화예술회관 창작 코믹오페라 '놀부전' 공연 개최", work: '〈놀부전〉', url: 'http://www.gndomin.com/news/articleView.html?idxno=399859' },
+    { date: '2024.02.14', outlet: '경남일보', title: "김해문화재단 예술인 지원사업 '불가사리' 첫 무대", work: '〈헨젤과 그레텔〉', url: 'http://www.gnnews.co.kr/news/articleView.html?idxno=545910' },
+    { date: '2023.08.30', outlet: '경남일보', title: '[월간문화] 9월', work: '〈어쩌다 마주친 클래식〉', url: 'https://www.gnnews.co.kr/news/articleView.html?idxno=533789' },
+    { date: '2023.05.21', outlet: '경남도민일보', title: '이음오페라단, 모차르트 오페라 〈코지 판 투테〉 공연', work: '〈코지 판 투테〉', url: 'https://www.idomin.com/news/articleView.html?idxno=825478' },
+    { date: '2023.02.27', outlet: '경남일보', title: '[월간문화] 3월', work: '〈춘향전〉', url: 'http://www.gnnews.co.kr/news/articleView.html?idxno=522875' },
+    { date: '2023.02.02', outlet: '경남신문', title: '무한 성장 김해 예술', work: '〈춘향전〉', url: 'http://www.knnews.co.kr/news/articleView.php?idxno=1396041' }
+  ];
+
+  // 관람후기: src = blog | insta | youtube, shot = 캡처 이미지 파일(선택), example: true 면 '예시' 표시
+  var REVIEWS = [
+    { src: 'insta', who: '@bboddolove', date: '2026.10.11', work: '新심청전', quote: '오랜만에 문화생활 즐기기. 오페라와 판소리가 어우러진 공연!', url: 'https://www.instagram.com/p/DeWQeAaFPUu/' },
+    { src: 'blog', who: '물장구', date: '2026.09.24', work: '新심청전', quote: '횡성문화관광재단 주관..판소리오페라 新심청전(이음오페라단)', url: 'https://blog.naver.com/muljanggu5/224421061171' },
+    { src: 'insta', who: '@kimdohoon_hwik_hwik', date: '2026.08.23', work: '新심청전', quote: '재창작오페라 "新심청전"입니다. 8/22 김해서부문화센터에서 60분간 공연했습니다.', url: 'https://www.instagram.com/p/DcYRPLUD5XN/' },
+    { src: 'blog', who: 'GoGo', date: '2026.08.22', work: '新심청전', quote: '이음 오페라단 신심청전', url: 'https://blog.naver.com/sabrinarmin/224386944138' },
+    { src: 'blog', who: '사오일공', date: '2025.10.23', work: '배비장전', quote: '소중한 시간이라 기뻤던, 하지만 아쉬웠던 <배비장전> 관람기', url: 'https://blog.naver.com/kiiru426/224051188481' },
+    { src: 'blog', who: '아우라권', date: '2024.05.31', work: '클래식에어라인', quote: '진영한빛도서관 음악공연감상 이음오페라단 비행기타고 떠나는 세계음악여행 클래식 에어라인', url: 'https://blog.naver.com/osimi00/223465070576' },
+    { src: 'blog', who: 'RYAN', date: '2023.10.22', work: '놀부전', quote: '김해 율하 서부문화센터에서 이음오페라단의 놀부전을 봤어요!', url: 'https://blog.naver.com/dongyoung817/223243491392' },
+    { src: 'blog', who: '247', date: '2023.05.27', work: '코지 판 투테', quote: '김해 데이트 이음오페라단 코지판투테 관람 후기(현대 버전, 코믹)', url: 'https://blog.naver.com/justdoeat247/223113034695' },
+    { src: 'blog', who: '아우라권', date: '2022.10.09', work: '어쩌다 마주친 클래식', quote: '이음오페라단 어쩌다 마주친 클래식 한국가곡 편을 관람하다.', url: 'https://blog.naver.com/osimi00/222895464321' }
+  ];
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function filters(el, keys, labels, counts, onPick) {
+    el.innerHTML = keys.map(function (k, i) { return '<button role="tab" aria-selected="' + (i === 0) + '" data-k="' + k + '">' + labels[i] + '<small>' + counts[i] + '</small></button>'; }).join('');
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      el.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-selected', x === b); });
+      onPick(b.dataset.k);
+    });
+  }
+
+  // 공지사항 그리기
+  var sortedN = NOTICES.slice().sort(function (a, b) { return (b.pin ? 1 : 0) - (a.pin ? 1 : 0); });
+  function noticeItem(n, i) {
+    return '<li class="' + (n.pin ? 'pin' : '') + '"><details' + (i === 0 && n.pin ? ' open' : '') + '><summary>' +
+      '<span class="cat ' + n.cat + '">' + n.cat + '</span>' +
+      '<span class="nt">' + (n.pin ? '<span class="pinmark">고정</span>' : '') + esc(n.title) + (n.example ? '<span class="ex">예시</span>' : '') + '</span>' +
+      '<span class="nd">' + n.date + '</span></summary><div class="nbody">' +
+      n.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
+      (n.info ? '<dl>' + n.info.map(function (r) { return '<dt>' + r[0] + '</dt><dd>' + esc(r[1]) + '</dd>'; }).join('') + '</dl>' : '') +
+      (n.link ? '<a class="btn" href="' + n.link[1] + '" target="_blank" rel="noopener">' + n.link[0] + ' ↗</a>' : '') +
+      '</div></details></li>';
+  }
+  var newsList = document.getElementById('newsList');
+  function drawNews(k) { newsList.innerHTML = sortedN.filter(function (n) { return k === '전체' || n.cat === k; }).map(noticeItem).join(''); }
+  // 글이 있는 분류만 버튼으로 보여 준다
+  var nKeys = ['전체', '공연', '오디션', '결과발표', '소식'].filter(function (k) { return k === '전체' || NOTICES.some(function (n) { return n.cat === k; }); });
+  filters(document.getElementById('newsFilter'), nKeys, nKeys, nKeys.map(function (k) { return k === '전체' ? NOTICES.length : NOTICES.filter(function (n) { return n.cat === k; }).length; }), drawNews);
+  drawNews('전체');
+  document.getElementById('homeNews').innerHTML = sortedN.slice(0, 3).map(function (n) {
+    return '<li><a href="#news"><summary><span class="cat ' + n.cat + '">' + n.cat + '</span><span class="nt">' + esc(n.title) + (n.example ? '<span class="ex">예시</span>' : '') + '</span><span class="nd">' + n.date + '</span></summary></a></li>';
+  }).join('');
+
+  // 언론보도 그리기 (연도별)
+  var years = {}, order = [];
+  PRESS.forEach(function (p) { var y = p.date ? p.date.slice(0, 4) : '그 밖의 기사'; if (!years[y]) { years[y] = []; order.push(y); } years[y].push(p); });
+  document.getElementById('pressList').innerHTML = order.map(function (y) {
+    return '<div class="pyear reveal"><h3>' + y + '</h3><ul>' + years[y].map(function (p) {
+      return '<li><a href="' + p.url + '" target="_blank" rel="noopener"><span class="pd">' + (p.date ? p.date.slice(5) : '—') + '</span><span class="po">' + p.outlet + '</span><span class="pt2">' + esc(p.title) + (p.work ? '<small>' + p.work + '</small>' : '') + '</span></a></li>';
+    }).join('') + '</ul></div>';
+  }).join('');
+
+  // 관람후기 그리기
+  var srcName = { blog: '네이버 블로그', insta: '인스타그램', youtube: '유튜브' }, srcMark = { blog: 'N', insta: 'IG', youtube: '▶' };
+  var revList = document.getElementById('revList');
+  function drawRev(k) {
+    revList.innerHTML = REVIEWS.filter(function (r) { return k === 'all' || r.src === k; }).map(function (r) {
+      return '<a class="rv" href="' + r.url + '"' + (r.url !== '#' ? ' target="_blank" rel="noopener"' : '') + '>' + (r.example ? '<span class="exrib">예시</span>' : '') +
+        (r.shot ? '<div class="shot" style="--img:url(\'' + r.shot + '\')"></div>' : '') +
+        '<div class="src"><i class="' + r.src + '">' + srcMark[r.src] + '</i><div><b>' + esc(r.who) + '</b><br>' + srcName[r.src] + '</div></div>' +
+        '<q>' + esc(r.quote) + '</q><div class="meta2"><span>' + r.date + '</span><span>〈' + r.work.replace(/[〈〉]/g, '') + '〉 원문 보기 ↗</span></div></a>';
+    }).join('');
+  }
+  filters(document.getElementById('revFilter'), ['all', 'blog', 'insta'], ['전체', '블로그', '인스타그램'], [REVIEWS.length, REVIEWS.filter(function (r) { return r.src === 'blog'; }).length, REVIEWS.filter(function (r) { return r.src === 'insta'; }).length], drawRev);
+  drawRev('all');
+
+  // 스크롤: 상단 그림자, 붉은 실 진행
+  var top = document.getElementById('top');
+  function onScroll() {
+    var y = window.scrollY, h = document.documentElement.scrollHeight - innerHeight;
+    top.classList.toggle('scrolled', y > 10);
+    var idx = names.indexOf(current), seg = 1 / (names.length - 1), within = h > 0 ? Math.min(1, y / h) : 0;
+    thread.style.setProperty('--p', Math.min(1, idx * seg + within * seg * (idx < names.length - 1 ? 1 : 0)));
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // 먹이 번지듯 나타나기 (화면 밖 요소만)
+  var io = null;
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('js');
+    io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.remove('wait'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+  }
+  function prepReveal(view) {
+    if (!io || !view) return;
+    view.querySelectorAll('.reveal').forEach(function (el, n) {
+      el.classList.remove('wait');
+      if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('wait'); el.style.transitionDelay = (n % 3) * 0.1 + 's'; io.observe(el); }
+    });
+  }
+
+  show(location.hash.slice(1) || 'home', false);
+})();
+</script>
+
+</body></html>
