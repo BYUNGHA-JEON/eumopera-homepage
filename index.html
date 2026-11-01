@@ -62,6 +62,16 @@ body.lock .mbtn i { background: var(--paper); }
 body.lock .mbtn i span { transform: rotate(45deg); }
 body.lock .mbtn i span::before { width: 16px; top: 0; transform: rotate(90deg); }
 @media (max-width: 600px) { .top .cur-page { display: none; } .mbtn { padding: 0 6px 0 16px; } }
+/* 상단 바로가기 메뉴 4개 (넓은 화면에서만, 좁으면 MENU만) */
+.gnb { display: flex; flex: 1; justify-content: flex-end; align-items: center; gap: clamp(18px, 2.6vw, 34px); margin-right: 8px; transition: opacity .3s; }
+.gnb a { position: relative; padding: 8px 0; font-family: var(--font-ui); font-size: 15px; font-weight: 500; color: var(--ink); white-space: nowrap; transition: color .25s; }
+.gnb a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: var(--seal); transform: scaleX(0); transition: transform .3s; }
+.gnb a:hover, .gnb a.on { color: var(--jade-2); }
+.gnb a:hover::after, .gnb a.on::after { transform: scaleX(1); }
+.top .cur-page { display: none; }
+body.lock .gnb { opacity: 0; pointer-events: none; }
+@media (max-width: 860px) { .gnb { display: none; } .top .cur-page { display: inline; } }
+@media (max-width: 600px) { .top .cur-page { display: none; } }
 
 /* ── 병풍 메뉴: 여섯 폭이 차례로 펼쳐져 한 장의 공연 사진이 되고, 그 위에 메뉴가 떠오른다 ── */
 .overlay { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
@@ -221,19 +231,6 @@ body.lock .overlay .meta { opacity: 1; transition: opacity .6s 1.3s; }
 .recent a:hover b { color: var(--jade-2); }
 @media (max-width: 860px) { .feat { grid-template-columns: 1fr; gap: 40px; } .feat .poster { max-width: 320px; } .recent { grid-template-columns: 1fr; gap: 18px; } }
 
-/* 둘러보기 카드 */
-.tour { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
-.tour a { position: relative; aspect-ratio: 3 / 4; max-width: 100%; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 22px; color: #fff; isolation: isolate; border-radius: 0 0 0 0; }
-.tour a::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--img) var(--pos, center) / cover; transition: transform 1.2s cubic-bezier(.2,.8,.2,1); }
-.tour a::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, transparent 35%, rgba(20,32,29,.85)); transition: background .5s; }
-.tour a:hover::before { transform: scale(1.08); }
-.tour a:hover::after { background: linear-gradient(180deg, rgba(47,111,95,.2), rgba(20,32,29,.9)); }
-.tour small { font-family: var(--font-ui); font-size: 11px; letter-spacing: .2em; opacity: .8; }
-.tour b { font-family: var(--font-display); font-size: 24px; font-weight: 800; }
-.tour span { font-family: var(--font-ui); font-size: 13px; opacity: .85; display: flex; justify-content: space-between; align-items: center; }
-.tour span::after { content: "→"; transition: transform .3s; }
-.tour a:hover span::after { transform: translateX(6px); }
-@media (max-width: 860px) { .tour { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* ── 소개 ── */
 .about { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 72px; align-items: start; }
@@ -463,6 +460,12 @@ footer.foot nav a:hover { color: #fff; }
 <header class="top" id="top">
   <div class="wrap">
     <a class="logo" href="#home" aria-label="이음오페라단 처음으로"><img src="img/logo.png" alt="이음오페라단 EUM OPERA" width="812" height="110"></a>
+    <nav class="gnb" aria-label="바로가기 메뉴">
+      <a href="#about">오페라단 소개</a>
+      <a href="#repertoire">레퍼토리</a>
+      <a href="#history">연혁</a>
+      <a href="#home">공연 일정</a>
+    </nav>
     <div class="right">
       <span class="cur-page" id="curPage">공연 일정</span>
       <button class="mbtn" id="mbtn" aria-expanded="false" aria-controls="overlay">MENU<i><span></span></i></button>
@@ -558,21 +561,6 @@ footer.foot nav a:hover { color: #fff; }
           <a class="reveal" href="#repertoire" data-work="4"><div class="poster img" style="--img:url('img/p-bae.jpg')"></div><div><b>창작 코믹 오페라 〈배비장전〉</b><span>2026.10.7 · 밀양아리랑아트센터 대공연장</span></div></a>
           <a class="reveal" href="#repertoire" data-work="0"><div class="poster img" style="--img:url('img/p-sim.jpg')"></div><div><b>판소리 오페라 〈新심청전〉</b><span>2026.9.11 · 횡성 / 8.22 · 김해<br>YES24 클래식 예매율 1위</span></div></a>
           <a class="reveal" href="#repertoire" data-work="1"><div class="poster img" style="--img:url('img/p-cin.jpg')"></div><div><b>어린이 동화 오페라 〈신데렐라〉</b><span>2026.5.23 · 김해서부문화센터 하늬홀<br>한국 초연</span></div></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="sec">
-      <div class="wrap">
-        <div class="sec-head reveal">
-          <div><span class="label">EXPLORE</span><h2>이음 둘러보기</h2></div>
-          <p>오른쪽 위 메뉴에서도 모든 페이지로 갈 수 있습니다.</p>
-        </div>
-        <div class="tour">
-          <a class="reveal" href="#about" style="--img:url('img/about.jpg');--pos:center 25%"><small>ABOUT</small><b>오페라단 소개</b><span>관객과 연주자를 잇다</span></a>
-          <a class="reveal" href="#repertoire" style="--img:url('img/ph-han.jpg');--pos:50% 40%"><small>REPERTOIRE</small><b>레퍼토리</b><span>상설 레퍼토리 5편</span></a>
-          <a class="reveal" href="#history" style="--img:url('img/ph-nol.jpg')"><small>HISTORY</small><b>연혁</b><span>2020년부터 지금까지</span></a>
-          <a class="reveal" href="#reviews" style="--img:url('img/ph-cin.jpg');--pos:55% 60%"><small>REVIEWS</small><b>관람후기</b><span>관객이 남긴 이야기</span></a>
         </div>
       </div>
     </section>
@@ -791,7 +779,7 @@ footer.foot nav a:hover { color: #fff; }
   var body = document.body, btn = document.getElementById('mbtn'), ov = document.getElementById('overlay');
   var views = document.querySelectorAll('.view'), names = Array.prototype.map.call(views, function (v) { return v.dataset.view; });
   var curPage = document.getElementById('curPage'), thread = document.getElementById('thread'), dots = thread.querySelectorAll('a');
-  var menuLinks = document.querySelectorAll('#menuList a'), current = null;
+  var menuLinks = document.querySelectorAll('#menuList a, .gnb a'), current = null;
 
   function setMenu(open) { body.classList.toggle('lock', open); btn.setAttribute('aria-expanded', open); ov.setAttribute('aria-hidden', !open); }
   btn.addEventListener('click', function () { setMenu(!body.classList.contains('lock')); });
