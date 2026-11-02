@@ -236,6 +236,27 @@ body.lock .overlay .meta { opacity: 1; transition: opacity .6s 1.3s; }
 .info dt { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); padding-right: 28px; }
 .info dd.tbd { color: var(--ink-2); }
 .feat .credit { margin: -12px 0 24px; font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); }
+/* 다가오는 공연 넘기기 */
+.t-choir { --tone: radial-gradient(circle at 22% 88%, rgba(255,240,210,.35) 0 14%, transparent 15%), radial-gradient(circle at 70% 24%, rgba(255,255,255,.22) 0 9%, transparent 10%), linear-gradient(170deg, #d0a86f, #9a6440 55%, #5a3424); }
+.t-coffee { --tone: radial-gradient(circle at 74% 78%, rgba(255,236,210,.32) 0 16%, transparent 17%), radial-gradient(circle at 24% 22%, rgba(255,255,255,.18) 0 8%, transparent 9%), linear-gradient(170deg, #b88a63, #6e452c 55%, #33201a); }
+.up-ctrl { display: flex; align-items: center; gap: 10px; }
+.arrow2 { width: 48px; height: 48px; border-radius: 50%; border: 1px solid #cfd8d2; background: var(--bg); color: var(--ink); display: grid; place-items: center; cursor: pointer; transition: background .3s, color .3s, border-color .3s; }
+.arrow2:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+.arrow2 svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.up-count { min-width: 48px; text-align: center; font-family: var(--font-ui); font-size: 14px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.up-count b { color: var(--ink); font-weight: 500; }
+.up-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: -28px 0 40px; }
+.up-tabs button { display: inline-flex; align-items: baseline; gap: 10px; padding: 9px 18px; border: 1px solid #cfd8d2; border-radius: 999px; background: var(--bg); cursor: pointer; font-family: var(--font-ui); font-size: 14px; color: var(--ink-2); transition: background .25s, color .25s, border-color .25s; }
+.up-tabs button time { font-variant-numeric: tabular-nums; color: var(--seal); font-weight: 500; }
+.up-tabs button:hover { border-color: var(--jade); color: var(--ink); }
+.up-tabs button[aria-current="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.up-tabs button[aria-current="true"] time { color: #f8b3aa; }
+.up-view { overflow: hidden; margin: -30px -20px; padding: 30px 20px; }
+.up-track { display: flex; transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+.up-slide { flex: 0 0 100%; min-width: 0; transition: opacity .5s; }
+.up-slide[aria-hidden="true"] { opacity: .25; }
+.up-one .up-ctrl, .up-one .up-tabs { display: none; }
+@media (max-width: 860px) { .up-tabs { margin-top: -20px; } .up-ctrl .arrow2 { width: 42px; height: 42px; } }
 .sub-label { font-family: var(--font-ui); font-size: 13px; color: var(--ink-2); letter-spacing: .14em; margin: 90px 0 26px; display: flex; align-items: center; gap: 14px; }
 .sub-label::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .recent { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
@@ -555,21 +576,58 @@ footer.foot nav a:hover { color: #fff; }
       <div class="wrap">
         <div class="sec-head reveal">
           <div><span class="label">NEXT SHOW</span><h2>공연 일정</h2></div>
+          <div class="up-ctrl">
+            <button class="arrow2" type="button" id="upPrev" aria-label="이전 공연"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+            <span class="up-count" id="upCount"></span>
+            <button class="arrow2" type="button" id="upNext" aria-label="다음 공연"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+          </div>
         </div>
-        <div class="feat">
-          <div class="poster t-byul reveal" role="img" aria-label="별주부전 포스터 자리"><span class="pt">Eum Opera · 2026</span><span class="pn" style="font-size:clamp(40px,5vw,60px)"><em>어린이 동화 오페라</em>별주부전</span><span class="pf">2026. 12. 6 (일) 오후 5시<br>김해문화의전당</span></div>
-          <div class="reveal">
-            <h3><small>어린이 동화 오페라</small>별주부전</h3>
-            <p class="desc">용왕님의 병을 고치려 뭍으로 나온 자라와 꾀 많은 토끼의 바닷속 모험. 우리 옛이야기 〈별주부전〉을 온 가족이 함께 즐기는 오페라로 만납니다.</p>
-            <dl class="info">
-              <dt>일시</dt><dd>2026년 12월 6일 (일) 오후 5시</dd>
-              <dt>장소</dt><dd>김해문화의전당</dd>
-              <dt>티켓</dt><dd>전석 10,000원</dd>
-              <dt>관람</dt><dd>5세 이상 · 공연시간 70분</dd>
-              <dt>예매</dt><dd class="tbd">예매처 오픈 후 안내</dd>
-            </dl>
-            <p class="credit">주최 김해시 · 주관 이음오페라단 · 후원 김해문화관광재단</p>
-            <a class="btn" href="#contact">예매 문의 →</a>
+        <div class="up-tabs reveal" id="upTabs" aria-label="다가오는 공연"></div>
+        <!-- 다가오는 공연: data-date 가 지나면 자동으로 빠진다. 새 공연은 날짜 순서에 맞춰 .up-slide 하나를 복사해 넣으면 된다. -->
+        <div class="up-view">
+          <div class="up-track" id="upTrack">
+            <div class="feat up-slide" data-date="2026-11-21" data-tab="진영소리합창단 정기연주회">
+              <div class="poster t-choir" role="img" aria-label="진영소리합창단 정기연주회 안내 그림"><span class="pt">Eum Opera · 2026</span><span class="pn" style="font-size:clamp(30px,3.6vw,44px)"><em>제6회 정기연주회</em>진영소리<br>합창단</span><span class="pf">2026. 11. 21 (토)<br>진영문화센터 공연장</span></div>
+              <div>
+                <h3><small>합창 · 제6회 정기연주회</small>진영소리합창단</h3>
+                <p class="desc">진영소리합창단이 한 해 동안 함께 준비한 노래를 들려드리는 여섯 번째 정기연주회입니다.</p>
+                <dl class="info">
+                  <dt>일시</dt><dd>2026년 11월 21일 (토)</dd>
+                  <dt>장소</dt><dd>진영문화센터 공연장</dd>
+                  <dt>관람</dt><dd class="tbd">공연 시간·관람 방법 추후 안내</dd>
+                </dl>
+                <a class="btn" href="#contact">공연 문의 →</a>
+              </div>
+            </div>
+            <div class="feat up-slide" data-date="2026-12-06" data-tab="어린이 동화 오페라 〈별주부전〉">
+              <div class="poster t-byul" role="img" aria-label="별주부전 포스터 자리"><span class="pt">Eum Opera · 2026</span><span class="pn" style="font-size:clamp(40px,5vw,60px)"><em>어린이 동화 오페라</em>별주부전</span><span class="pf">2026. 12. 6 (일) 오후 5시<br>김해문화의전당</span></div>
+              <div>
+                <h3><small>어린이 동화 오페라</small>별주부전</h3>
+                <p class="desc">용왕님의 병을 고치려 뭍으로 나온 자라와 꾀 많은 토끼의 바닷속 모험. 우리 옛이야기 〈별주부전〉을 온 가족이 함께 즐기는 오페라로 만납니다.</p>
+                <dl class="info">
+                  <dt>일시</dt><dd>2026년 12월 6일 (일) 오후 5시</dd>
+                  <dt>장소</dt><dd>김해문화의전당</dd>
+                  <dt>티켓</dt><dd>전석 10,000원</dd>
+                  <dt>관람</dt><dd>5세 이상 · 공연시간 70분</dd>
+                  <dt>예매</dt><dd class="tbd">예매처 오픈 후 안내</dd>
+                </dl>
+                <p class="credit">주최 김해시 · 주관 이음오페라단 · 후원 김해문화관광재단</p>
+                <a class="btn" href="#contact">예매 문의 →</a>
+              </div>
+            </div>
+            <div class="feat up-slide" data-date="2026-12-17" data-tab="〈바흐의 커피칸타타〉">
+              <div class="poster t-coffee" role="img" aria-label="바흐의 커피칸타타 안내 그림"><span class="pt">Eum Opera · 2026</span><span class="pn" style="font-size:clamp(30px,3.8vw,46px)"><em>J. S. Bach</em>바흐의<br>커피칸타타</span><span class="pf">2026. 12. 17 (목)<br>진영문화센터 공연장</span></div>
+              <div>
+                <h3><small>바흐 칸타타</small>바흐의 커피칸타타</h3>
+                <p class="desc">커피를 사랑한 딸과 걱정 많은 아버지의 유쾌한 이야기. 바흐의 〈커피칸타타〉를 무대에서 만나 보세요.</p>
+                <dl class="info">
+                  <dt>일시</dt><dd>2026년 12월 17일 (목)</dd>
+                  <dt>장소</dt><dd>진영문화센터 공연장</dd>
+                  <dt>관람</dt><dd class="tbd">공연 시간·관람 방법 추후 안내</dd>
+                </dl>
+                <a class="btn" href="#contact">공연 문의 →</a>
+              </div>
+            </div>
           </div>
         </div>
         <p class="sub-label reveal">지난 공연</p>
@@ -1170,6 +1228,38 @@ footer.foot nav a:hover { color: #fff; }
       if (el.getBoundingClientRect().top > innerHeight) { el.classList.add('wait'); el.style.transitionDelay = (n % 3) * 0.1 + 's'; io.observe(el); }
     });
   }
+
+  // 다가오는 공연: 지난 날짜는 빼고, 화살표·날짜 버튼·밀기로 넘긴다
+  (function () {
+    var track = document.getElementById('upTrack'), tabs = document.getElementById('upTabs'), count = document.getElementById('upCount');
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    Array.prototype.slice.call(track.children).forEach(function (s) { if (new Date(s.dataset.date + 'T23:59:59') < today) s.remove(); });
+    var slides = track.children, N = slides.length, i = 0;
+    if (N <= 1) { document.getElementById('show').classList.add('up-one'); return; }
+    tabs.innerHTML = Array.prototype.map.call(slides, function (s) {
+      var d = s.dataset.date.split('-');
+      return '<button type="button"><time>' + d[1] + '.' + d[2] + '</time>' + s.dataset.tab + '</button>';
+    }).join('');
+    var tb = tabs.children;
+    function go(k) {
+      i = (k + N) % N;
+      track.style.transform = 'translateX(' + (-100 * i) + '%)';
+      Array.prototype.forEach.call(slides, function (s, j) { s.setAttribute('aria-hidden', j !== i); s.inert = j !== i; });
+      Array.prototype.forEach.call(tb, function (b, j) { b.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+      count.innerHTML = '<b>' + (i + 1) + '</b> / ' + N;
+    }
+    document.getElementById('upPrev').addEventListener('click', function () { go(i - 1); });
+    document.getElementById('upNext').addEventListener('click', function () { go(i + 1); });
+    Array.prototype.forEach.call(tb, function (b, j) { b.addEventListener('click', function () { go(j); }); });
+    var sx = null;
+    track.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1);
+    });
+    go(0);
+  })();
 
   show(location.hash.slice(1) || 'home', false);
 })();
